@@ -3,6 +3,8 @@ package com.abdeveloper.library;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Typeface;
+import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.RecyclerView;
@@ -12,30 +14,37 @@ import android.text.style.TextAppearanceSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
-class MutliSelectAdapter extends RecyclerView.Adapter<MutliSelectAdapter.MultiSelectDialogViewHolder> {
+class MultiSelectAdapter extends RecyclerView.Adapter<MultiSelectAdapter.MultiSelectDialogViewHolder> {
 
-    private ArrayList<MultiSelectModel> mDataSet = new ArrayList<>();
+    private ArrayList<MultiSelectModel> mDataSet;
     private String mSearchQuery = "";
     private Context mContext;
 
-    MutliSelectAdapter(ArrayList<MultiSelectModel> dataSet, Context context) {
+    MultiSelectAdapter(ArrayList<MultiSelectModel> dataSet, Context context) {
         this.mDataSet = dataSet;
         this.mContext = context;
     }
 
+    @NonNull
     @Override
-    public MultiSelectDialogViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MultiSelectDialogViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.multi_select_item, parent, false);
         return new MultiSelectDialogViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final MultiSelectDialogViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final MultiSelectDialogViewHolder holder, int position) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            holder.dialog_item_icon.setClipToOutline(true);
+        }
+        holder.dialog_item_icon.setImageResource(mDataSet.get(position).getImageResource());
 
         if (!mSearchQuery.equals("") && mSearchQuery.length() > 1) {
             setHighlightedText(position, holder.dialog_name_item);
@@ -118,7 +127,7 @@ class MutliSelectAdapter extends RecyclerView.Adapter<MutliSelectAdapter.MultiSe
     }
 
 
-    /*//get selected name string seperated by coma
+    /*//get selected name string separated by coma
     public String getDataString() {
         String data = "";
         for (int i = 0; i < mDataSet.size(); i++) {
@@ -133,7 +142,7 @@ class MutliSelectAdapter extends RecyclerView.Adapter<MutliSelectAdapter.MultiSe
         }
     }
 
-    //get selected name ararylist
+    //get selected name array list
     public ArrayList<String> getSelectedNameList() {
         ArrayList<String> names = new ArrayList<>();
         for (int i = 0; i < mDataSet.size(); i++) {
@@ -151,22 +160,24 @@ class MutliSelectAdapter extends RecyclerView.Adapter<MutliSelectAdapter.MultiSe
         return mDataSet.size();
     }
 
-    void setData(ArrayList<MultiSelectModel> data, String query, MutliSelectAdapter mutliSelectAdapter) {
+    void setData(ArrayList<MultiSelectModel> data, String query, MultiSelectAdapter multiSelectAdapter) {
         this.mDataSet = data;
         this.mSearchQuery = query;
-        mutliSelectAdapter.notifyDataSetChanged();
+        multiSelectAdapter.notifyDataSetChanged();
     }
 
     class MultiSelectDialogViewHolder extends RecyclerView.ViewHolder {
-        private TextView dialog_name_item;
-        private AppCompatCheckBox dialog_item_checkbox;
-        private LinearLayout main_container;
+        private final ImageView dialog_item_icon;
+        private final TextView dialog_name_item;
+        private final AppCompatCheckBox dialog_item_checkbox;
+        private final LinearLayout main_container;
 
         MultiSelectDialogViewHolder(View view) {
             super(view);
-            dialog_name_item = (TextView) view.findViewById(R.id.dialog_item_name);
-            dialog_item_checkbox = (AppCompatCheckBox) view.findViewById(R.id.dialog_item_checkbox);
-            main_container = (LinearLayout) view.findViewById(R.id.main_container);
+            dialog_item_icon = view.findViewById(R.id.dialog_item_icon);
+            dialog_name_item = view.findViewById(R.id.dialog_item_name);
+            dialog_item_checkbox = view.findViewById(R.id.dialog_item_checkbox);
+            main_container = view.findViewById(R.id.main_container);
         }
     }
 }

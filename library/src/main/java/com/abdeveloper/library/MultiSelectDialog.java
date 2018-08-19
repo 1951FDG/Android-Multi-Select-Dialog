@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,13 +21,15 @@ public class MultiSelectDialog extends AppCompatDialogFragment implements Search
 
     public static ArrayList<Integer> selectedIdsForCallback = new ArrayList<>();
 
-    public ArrayList<MultiSelectModel> mainListOfAdapter = new ArrayList<>();
-    private MutliSelectAdapter mutliSelectAdapter;
+    private ArrayList<MultiSelectModel> mainListOfAdapter = new ArrayList<>();
+    private MultiSelectAdapter multiSelectAdapter;
     //Default Values
+    private CharSequence hint;
     private String title;
-    private float titleSize = 25;
-    private String positiveText = "DONE";
-    private String negativeText = "CANCEL";
+    private float titleSize;
+    private String positiveText;
+    private String negativeText;
+    private SearchView searchView;
     private TextView dialogTitle, dialogSubmit, dialogCancel;
     private ArrayList<Integer> previouslySelectedIdsList = new ArrayList<>();
 
@@ -54,15 +57,15 @@ public class MultiSelectDialog extends AppCompatDialogFragment implements Search
         dialog.setContentView(R.layout.custom_multi_select);
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
-        RecyclerViewEmptySupport mrecyclerView =  dialog.findViewById(R.id.recycler_view);
-        SearchView searchView =  dialog.findViewById(R.id.search_view);
+        RecyclerViewEmptySupport recyclerView =  dialog.findViewById(R.id.recycler_view);
+        searchView =  dialog.findViewById(R.id.search_view);
         dialogTitle =  dialog.findViewById(R.id.title);
         dialogSubmit =  dialog.findViewById(R.id.done);
         dialogCancel =  dialog.findViewById(R.id.cancel);
 
-        mrecyclerView.setEmptyView(dialog.findViewById(R.id.list_empty1));
+        recyclerView.setEmptyView(dialog.findViewById(R.id.list_empty1));
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        mrecyclerView.setLayoutManager(layoutManager);
+        recyclerView.setLayoutManager(layoutManager);
 
         dialogSubmit.setOnClickListener(this);
         dialogCancel.setOnClickListener(this);
@@ -70,18 +73,31 @@ public class MultiSelectDialog extends AppCompatDialogFragment implements Search
         settingValues();
 
         mainListOfAdapter = setCheckedIDS(mainListOfAdapter, previouslySelectedIdsList);
-        mutliSelectAdapter = new MutliSelectAdapter(mainListOfAdapter, getContext());
-        mrecyclerView.setAdapter(mutliSelectAdapter);
+        multiSelectAdapter = new MultiSelectAdapter(mainListOfAdapter, getContext());
+        recyclerView.setAdapter(multiSelectAdapter);
 
         searchView.setOnQueryTextListener(this);
         searchView.onActionViewExpanded();
         searchView.clearFocus();
 
+        if (hint != null && hint.length() == 0) {
+            searchView.setQueryHint(null);
+        }
+
+        if (title != null && title.isEmpty()) {
+            LinearLayout parent = (LinearLayout)dialogTitle.getParent();
+            parent.setVisibility(View.GONE);
+        }
 
         return dialog;
     }
 
-    public MultiSelectDialog title(String title) {
+    public MultiSelectDialog hint(@NonNull CharSequence hint) {
+        this.hint = hint;
+        return this;
+    }
+
+    public MultiSelectDialog title(@NonNull String title) {
         this.title = title;
         return this;
     }
@@ -141,22 +157,23 @@ public class MultiSelectDialog extends AppCompatDialogFragment implements Search
     }
 
     private void settingValues() {
-        dialogTitle.setText(title);
-        dialogTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, titleSize);
-        dialogSubmit.setText(positiveText.toUpperCase());
-        dialogCancel.setText(negativeText.toUpperCase());
+        if (hint != null) searchView.setQueryHint(hint);
+        if (title != null) dialogTitle.setText(title);
+        if (titleSize != 0.0f) dialogTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, titleSize);
+        if (positiveText != null) dialogSubmit.setText(positiveText);
+        if (negativeText != null) dialogCancel.setText(negativeText);
     }
 
-    private ArrayList<MultiSelectModel> setCheckedIDS(ArrayList<MultiSelectModel> multiselectdata, ArrayList<Integer> listOfIdsSelected) {
-        for (int i = 0; i < multiselectdata.size(); i++) {
-            multiselectdata.get(i).setSelected(false);
+    private ArrayList<MultiSelectModel> setCheckedIDS(ArrayList<MultiSelectModel> multiSelectData, ArrayList<Integer> listOfIdsSelected) {
+        for (int i = 0; i < multiSelectData.size(); i++) {
+            multiSelectData.get(i).setSelected(false);
             for (int j = 0; j < listOfIdsSelected.size(); j++) {
-                if (listOfIdsSelected.get(j) == (multiselectdata.get(i).getId())) {
-                    multiselectdata.get(i).setSelected(true);
+                if (listOfIdsSelected.get(j) == (multiSelectData.get(i).getId())) {
+                    multiSelectData.get(i).setSelected(true);
                 }
             }
         }
-        return multiselectdata;
+        return multiSelectData;
     }
 
     private ArrayList<MultiSelectModel> filter(ArrayList<MultiSelectModel> models, String query) {
@@ -187,8 +204,8 @@ public class MultiSelectDialog extends AppCompatDialogFragment implements Search
     public boolean onQueryTextChange(String newText) {
         selectedIdsForCallback = previouslySelectedIdsList;
         mainListOfAdapter = setCheckedIDS(mainListOfAdapter, selectedIdsForCallback);
-        ArrayList<MultiSelectModel> filteredlist = filter(mainListOfAdapter, newText);
-        mutliSelectAdapter.setData(filteredlist, newText.toLowerCase(), mutliSelectAdapter);
+        ArrayList<MultiSelectModel> filteredList = filter(mainListOfAdapter, newText);
+        multiSelectAdapter.setData(filteredList, newText.toLowerCase(), multiSelectAdapter);
         return false;
     }
 
@@ -209,10 +226,10 @@ public class MultiSelectDialog extends AppCompatDialogFragment implements Search
                     }
                     dismiss();
                 } else {
-                    String youCan = getResources().getString(R.string.you_can_only_select_upto);
+                    String youCan = getResources().getString(R.string.you_can_only_select_up_to);
                     String options = getResources().getString(R.string.options);
                     String option = getResources().getString(R.string.option);
-                    String message = "";
+                    String message;
 
                     if(this.maxSelectionMessage != null) {
                         message = maxSelectionMessage;
@@ -226,10 +243,10 @@ public class MultiSelectDialog extends AppCompatDialogFragment implements Search
                     Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
                 }
             } else {
-                String pleaseSelect = getResources().getString(R.string.please_select_atleast);
+                String pleaseSelect = getResources().getString(R.string.please_select_at_least);
                 String options = getResources().getString(R.string.options);
                 String option = getResources().getString(R.string.option);
-                String message = "";
+                String message;
 
                 if(this.minSelectionMessage != null) {
                     message = minSelectionMessage;
@@ -255,10 +272,10 @@ public class MultiSelectDialog extends AppCompatDialogFragment implements Search
     }
 
     private String getSelectedDataString() {
-        String data = "";
+        StringBuilder data = new StringBuilder();
         for (int i = 0; i < tempMainListOfAdapter.size(); i++) {
             if (checkForSelection(tempMainListOfAdapter.get(i).getId())) {
-                data = data + ", " + tempMainListOfAdapter.get(i).getName();
+                data.append(", ").append(tempMainListOfAdapter.get(i).getName());
             }
         }
         if (data.length() > 0) {
@@ -292,7 +309,7 @@ public class MultiSelectDialog extends AppCompatDialogFragment implements Search
     }*/
 
     public interface SubmitCallbackListener {
-        void onSelected(ArrayList<Integer> selectedIds, ArrayList<String> selectedNames, String commonSeperatedData);
+        void onSelected(ArrayList<Integer> selectedIds, ArrayList<String> selectedNames, String commonSeparatedData);
         void onCancel();
     }
 

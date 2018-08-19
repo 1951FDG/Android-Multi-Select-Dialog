@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">SampleApplication</string>
+    <string name="multi_select_dialog_hint">Search</string>
     <string name="multi_select_dialog_title">Select Countries</string>
     <string name="show_multi_select_dialog">Show Multi Select Dialog</string>
+    <string name="dialog_done_text">Done</string>
+    <string name="dialog_cancel_text">Cancel</string>
 </resources>
