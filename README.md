@@ -11,12 +11,8 @@ Demo
 --------
 For a working implementation of this project see the `app/src/` folder.
 
-<img src="ezgif.com-video-to-gif.gif">
-
-
 Setup
 --------
-
 
 1. **Add the JitPack repository to your build file**
 
@@ -33,55 +29,20 @@ Setup
 2. **Add the dependency**
 ```gradle
 	dependencies {
-      		 compile 'com.github.abumoallim:Android-Multi-Select-Dialog:v1.9'
+      		 implementation 'com.github.1951FDG:Android-Multi-Select-Dialog:v2.1'
 	}
 ```
 
 Usage
 --------
+
 See Sample in SampleApplication
-```
- //MultiSelectModel
-        MultiSelectDialog multiSelectDialog = new MultiSelectDialog()
-                .title(getResources().getString(R.string.multi_select_dialog_title)) //setting title for dialog
-                .titleSize(25)
-                .positiveText("Done")
-                .negativeText("Cancel")
-		.setMinSelectionLimit(1) //you can set minimum checkbox selection limit (Optional)
-		.setMaxSelectionLimit(listOfCountries.size()) //you can set maximum checkbox selection limit (Optional)
-                .preSelectIDsList(alreadySelectedCountries) //List of ids that you need to be selected
-                .multiSelectList(listOfCountries) // the multi select model list with ids and name
-                .onSubmit(new MultiSelectDialog.SubmitCallbackListener() {
-                    @Override
-                    public void onSelected(ArrayList<Integer> selectedIds, ArrayList<String> selectedNames, String dataString) {
-                        //will return list of selected IDS
-                        for (int i = 0; i < selectedIds.size(); i++) {
-                            Toast.makeText(MainActivity.this, "Selected Ids : " + selectedIds.get(i) + "\n" +
-                                    "Selected Names : " + selectedNames.get(i) + "\n" +
-                                    "DataString : " + dataString, Toast.LENGTH_SHORT).show();
-                        }
-
-
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        Log.d(TAG,"Dialog cancelled");
-                    }
-
-
-                });
-		
-	 multiSelectDialog.show(getSupportFragmentManager(), "multiSelectDialog");
-
-
-```
-
 
 License
 --------
 
     Copyright 2017 Abubakker Moallim
+    Copyright 2018 Derrick Croes
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
