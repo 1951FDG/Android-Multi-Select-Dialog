@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 public class MultiSelectDialog extends AppCompatDialogFragment implements SearchView.OnQueryTextListener, View.OnClickListener {
 
-    public static ArrayList<Integer> selectedIdsForCallback = new ArrayList<>();
+    static ArrayList<Integer> selectedIdsForCallback = new ArrayList<>();
 
     private ArrayList<MultiSelectModel> mainListOfAdapter = new ArrayList<>();
     private MultiSelectAdapter multiSelectAdapter;

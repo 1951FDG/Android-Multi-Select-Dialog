@@ -101,6 +101,7 @@ class MultiSelectAdapter extends RecyclerView.Adapter<MultiSelectAdapter.MultiSe
         dialog_item_checkbox_LayoutParams.gravity = Gravity.CENTER_VERTICAL;
         dialog_item_checkbox_LayoutParams.leftMargin = resources.getDimensionPixelSize(R.dimen.dialog_item_icon_right_margin);
         dialog_item_checkbox_LayoutParams.rightMargin = resources.getDimensionPixelSize(R.dimen.dialog_item_icon_left_margin);
+        dialog_item_checkbox.setClickable(false);
         root.addView(dialog_item_checkbox);
         dialog_item_checkbox.setLayoutParams(dialog_item_checkbox_LayoutParams);
 
