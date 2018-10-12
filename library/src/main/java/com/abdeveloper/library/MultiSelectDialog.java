@@ -2,10 +2,12 @@ package com.abdeveloper.library;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatDialogFragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.SearchView;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDialogFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.appcompat.widget.SearchView;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +21,7 @@ import java.util.ArrayList;
 
 public class MultiSelectDialog extends AppCompatDialogFragment implements SearchView.OnQueryTextListener, View.OnClickListener {
 
-    public static ArrayList<Integer> selectedIdsForCallback = new ArrayList<>();
+    static ArrayList<Integer> selectedIdsForCallback = new ArrayList<>();
 
     private ArrayList<MultiSelectModel> mainListOfAdapter = new ArrayList<>();
     private MultiSelectAdapter multiSelectAdapter;
@@ -48,14 +50,17 @@ public class MultiSelectDialog extends AppCompatDialogFragment implements Search
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        final Dialog dialog = new Dialog(getActivity());
-        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setFlags(
+        final Dialog dialog = new Dialog(requireActivity());
+        Window window = dialog.getWindow();
+        if (window == null)
+            throw new NullPointerException();
+        window.requestFeature(Window.FEATURE_NO_TITLE);
+        window.setFlags(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         dialog.setContentView(R.layout.custom_multi_select);
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
         RecyclerViewEmptySupport recyclerView =  dialog.findViewById(R.id.recycler_view);
         searchView =  dialog.findViewById(R.id.search_view);
@@ -64,7 +69,7 @@ public class MultiSelectDialog extends AppCompatDialogFragment implements Search
         dialogCancel =  dialog.findViewById(R.id.cancel);
 
         recyclerView.setEmptyView(dialog.findViewById(R.id.list_empty1));
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
         dialogSubmit.setOnClickListener(this);

@@ -1,7 +1,7 @@
 package com.abdeveloper.library;
 
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
 
 public class MultiSelectModel {
     private Integer id;

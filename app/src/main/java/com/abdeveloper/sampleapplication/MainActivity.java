@@ -1,7 +1,7 @@
 package com.abdeveloper.sampleapplication;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -15,18 +15,16 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private String TAG = "Cancel";
+    private final String TAG = "Cancel";
 
-    Button show_dialog_btn;
-
-    MultiSelectDialog multiSelectDialog;
+    private MultiSelectDialog multiSelectDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
-        show_dialog_btn = findViewById(R.id.show_dialog);
+        Button show_dialog_btn = findViewById(R.id.show_dialog);
         show_dialog_btn.setOnClickListener(this);
 
         //preselected Ids of Country List

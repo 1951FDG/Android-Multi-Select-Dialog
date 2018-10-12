@@ -27,7 +27,7 @@
             tools:text="@string/select_entry" />
     </LinearLayout>
 
-    <android.support.v7.widget.SearchView
+    <androidx.appcompat.widget.SearchView
         android:id="@+id/search_view"
         android:layout_width="match_parent"
         android:layout_height="48dp"

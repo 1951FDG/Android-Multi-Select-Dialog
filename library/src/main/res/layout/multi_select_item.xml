@@ -42,7 +42,7 @@
 
     </LinearLayout>
 
-    <android.support.v7.widget.AppCompatCheckBox
+    <androidx.appcompat.widget.AppCompatCheckBox
         android:id="@+id/dialog_item_checkbox"
         style="?android:attr/checkboxStyle"
         android:layout_width="wrap_content"

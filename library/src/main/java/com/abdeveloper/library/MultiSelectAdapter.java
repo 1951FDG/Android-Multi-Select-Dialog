@@ -4,10 +4,10 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.AppCompatCheckBox;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.TextAppearanceSpan;
@@ -24,7 +24,7 @@ class MultiSelectAdapter extends RecyclerView.Adapter<MultiSelectAdapter.MultiSe
 
     private ArrayList<MultiSelectModel> mDataSet;
     private String mSearchQuery = "";
-    private Context mContext;
+    private final Context mContext;
 
     MultiSelectAdapter(ArrayList<MultiSelectModel> dataSet, Context context) {
         this.mDataSet = dataSet;
