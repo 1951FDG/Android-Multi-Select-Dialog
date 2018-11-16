@@ -35,7 +35,7 @@ Setup
 2. **Add the dependency**
 ```gradle
 	dependencies {
-      		 implementation 'com.github.1951FDG:Android-Multi-Select-Dialog:v2.1'
+      		 implementation 'com.github.1951FDG:Android-Multi-Select-Dialog:v2.2'
 	}
 ```
 
