@@ -9,6 +9,10 @@ Features
 * Search through list
 * Highlighted the search text
 
+Screenshots
+--------
+<img src="https://github.com/1951FDG/openpyn-nordvpn-juiceSSH/blob/master/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_02_1541723220359.png" width="50%">
+
 Demo
 --------
 For a working implementation of this project see the `app/src/` folder.
