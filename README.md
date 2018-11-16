@@ -1,4 +1,6 @@
 # MultiSelectDialog
+[![JitPack](https://img.shields.io/jitpack/v/1951FDG/Android-Multi-Select-Dialog.svg)](https://jitpack.io/#1951FDG/Android-Multi-Select-Dialog)
+
 A multi choice select dialog with Search and Text highlighting
 
 Features
