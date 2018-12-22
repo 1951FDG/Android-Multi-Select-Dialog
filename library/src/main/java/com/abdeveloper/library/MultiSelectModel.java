@@ -1,55 +1,39 @@
 package com.abdeveloper.library;
 
+import android.text.SpannableString;
+
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 
 public class MultiSelectModel {
-    private Integer id;
-    private String name;
+    private final int id;
+    private SpannableString name;
     private int resource;
-    private Boolean isSelected;
 
-    public MultiSelectModel(Integer id, @NonNull String name) {
-        this(id, name, 0);
+    public MultiSelectModel(int uniqueId, @NonNull SpannableString str) {
+        this(uniqueId, str, 0);
     }
 
-    public MultiSelectModel(Integer id, @NonNull String name, @DrawableRes int resId) {
-        this.id = id;
-        this.name = name;
-        this.resource = resId;
+    public MultiSelectModel(int uniqueId, @NonNull SpannableString str, @DrawableRes int resId) {
+        id = uniqueId;
+        name = str;
+        resource = resId;
     }
-
 
     public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     @NonNull
-    public String getName() {
+    public SpannableString getName() {
         return name;
     }
 
-    public void setName(@NonNull String name) {
-        this.name = name;
+    public void setName(@NonNull SpannableString str) {
+        name = str;
     }
 
     public int getImageResource() {
         return resource;
-    }
-
-    public void setImageResource(@DrawableRes int resId) {
-        this.resource = resId;
-    }
-
-    Boolean getSelected() {
-        return isSelected;
-    }
-
-    void setSelected(Boolean selected) {
-        isSelected = selected;
     }
 }

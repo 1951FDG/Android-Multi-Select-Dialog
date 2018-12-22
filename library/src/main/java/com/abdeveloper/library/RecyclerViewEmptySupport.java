@@ -1,13 +1,16 @@
 package com.abdeveloper.library;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
+
 public class RecyclerViewEmptySupport extends RecyclerView {
     private View emptyView;
-    final private AdapterDataObserver observer = new AdapterDataObserver() {
+    private final AdapterDataObserver observer = new AdapterDataObserver() {
         @Override
         public void onChanged() {
             checkIfEmpty();
@@ -24,29 +27,29 @@ public class RecyclerViewEmptySupport extends RecyclerView {
         }
     };
 
-    public RecyclerViewEmptySupport(Context context) {
+    public RecyclerViewEmptySupport(@NonNull Context context) {
         super(context);
     }
 
-    public RecyclerViewEmptySupport(Context context, AttributeSet attrs) {
+    public RecyclerViewEmptySupport(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public RecyclerViewEmptySupport(Context context, AttributeSet attrs, int defStyle) {
+    public RecyclerViewEmptySupport(@NonNull Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
-    private void checkIfEmpty() {
-        if (emptyView != null && getAdapter() != null) {
-            final boolean emptyViewVisible = getAdapter().getItemCount() == 0;
+    public void checkIfEmpty() {
+        Adapter adapter = getAdapter();
+        if ((emptyView != null) && (adapter != null)) {
+            boolean emptyViewVisible = adapter.getItemCount() == 0;
             emptyView.setVisibility(emptyViewVisible ? VISIBLE : GONE);
-            setVisibility(emptyViewVisible ? GONE : VISIBLE);
         }
     }
 
     @Override
-    public void setAdapter(Adapter adapter) {
-        final Adapter oldAdapter = getAdapter();
+    public void setAdapter(@Nullable Adapter adapter) {
+        Adapter oldAdapter = getAdapter();
         if (oldAdapter != null) {
             oldAdapter.unregisterAdapterDataObserver(observer);
         }
@@ -58,8 +61,8 @@ public class RecyclerViewEmptySupport extends RecyclerView {
         checkIfEmpty();
     }
 
-    public void setEmptyView(View emptyView) {
-        this.emptyView = emptyView;
+    public void setEmptyView(@NonNull View view) {
+        emptyView = view;
         checkIfEmpty();
     }
 }

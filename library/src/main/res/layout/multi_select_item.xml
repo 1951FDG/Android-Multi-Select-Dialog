@@ -16,28 +16,21 @@
         android:layout_marginEnd="@dimen/dialog_item_icon_right_margin"
         android:layout_marginRight="@dimen/dialog_item_icon_right_margin"
         android:background="@drawable/icon_background_material"
-        android:contentDescription="@string/app_name"
         android:scaleType="centerCrop"
         tools:srcCompat="@tools:sample/avatars" />
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="start|center_vertical"
-        android:orientation="vertical">
-
         <TextView
             android:id="@+id/dialog_item_name"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
             android:ellipsize="end"
             android:includeFontPadding="false"
             android:maxLines="1"
             android:textSize="@dimen/font_size_subheading"
-            tools:text="TextView" />
-
-    </LinearLayout>
+            tools:ignore="SelectableText"
+            tools:text="@tools:sample/first_names" />
 
     <CheckBox
         android:id="@+id/dialog_item_checkbox"

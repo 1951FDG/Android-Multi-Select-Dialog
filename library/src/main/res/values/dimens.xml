@@ -1,18 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="font_size_heading">20sp</dimen>
     <dimen name="font_size_subheading">16sp</dimen>
     <dimen name="font_size_normal">14sp</dimen>
-
-    <!--<dimen name="recycler_view_margin">10dp</dimen>-->
     <dimen name="layout_margin">8dp</dimen>
-    <!--<dimen name="search_view_margin">5dp</dimen>-->
     <dimen name="text_button_size">14sp</dimen>
-    <!--<dimen name="text_view_margin">10dp</dimen>-->
-    <!--<dimen name="line_margin">40dp</dimen>-->
-
     <dimen name="main_container_height">56dp</dimen>
     <dimen name="dialog_item_icon_size">40dp</dimen>
     <dimen name="dialog_item_icon_left_margin">24dp</dimen>
     <dimen name="dialog_item_icon_right_margin">16dp</dimen>
+    <dimen name="dialog_corner_radius_material">2dp</dimen>
 </resources>

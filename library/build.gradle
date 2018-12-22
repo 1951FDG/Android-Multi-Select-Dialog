@@ -1,13 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
-group='com.github.abumoallim'
-
-
-ext {
-    PUBLISH_GROUP_ID = 'com.abdeveloper'
-    PUBLISH_ARTIFACT_ID = 'multi-select-dialog'
-    PUBLISH_VERSION = '1.1'
-}
+group = 'com.github.abumoallim'
 
 android {
     compileSdkVersion 28
@@ -34,11 +26,9 @@ dependencies {
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0-beta02', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'androidx.multidex:multidex:2.0.0'
 
     testImplementation 'junit:junit:4.12'
 }
-
-//apply from: 'https://raw.githubusercontent.com/blundell/release-android-library/master/android-release-aar.gradle'

@@ -1,28 +1,46 @@
-# MultiSelectDialog
+# MultiSelectDialog v3
+
 [![JitPack](https://img.shields.io/jitpack/v/1951FDG/Android-Multi-Select-Dialog.svg)](https://jitpack.io/#1951FDG/Android-Multi-Select-Dialog)
 
-A multi choice select dialog with Search and Text highlighting
+A fast and efficient multi choice select DialogFragment with async search and text highlighting
 
-Features
---------
-* Provides Multi selection Dialog
-* Search through list
-* Highlighted the search text
+> **Note**:
+> This fork is almost a complete rewrite of the original work by [Abubakker Moallim](https://github.com/abumoallim/Android-Multi-Select-Dialog)
 
-Screenshots
---------
+## Todo
+
+-   [ ] handle orientation changes
+
+## Features
+
+-   Uses ListAdapter (computes diffs between Lists on a background thread)
+-   Provides multi selection Dialog
+-   Search text is highlighted
+-   Search through list
+
+_Am I missing some essential feature?_
+
+-   Submit an [issue](https://github.com/1951FDG/Android-Multi-Select-Dialog/issues/new) and let's make this app better together!
+
+## Apps using this library
+
+-   [openpyn-nordvpn-juiceSSH](https://github.com/1951FDG/openpyn-nordvpn-juiceSSH)
+
+## Screenshots
+
 <img src="https://github.com/1951FDG/openpyn-nordvpn-juiceSSH/blob/master/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_02_1541723220359.png" width="50%">
 
-Demo
---------
-For a working implementation of this project see the `app/src/` folder.
+## Requirements
 
-Setup
---------
+-   **Minimum Android SDK** `4.1 (API level 16)`
+-   **Compile Android SDK** `9 (API level 28)`
 
-1. **Add the JitPack repository to your build file**
+## How to use
 
- Add it in your root build.gradle at the end of repositories:
+1.  **Add the JitPack repository to your build file**
+
+    Add it in your root build.gradle at the end of repositories:
+
 ```gradle
 	allprojects {
 		repositories {
@@ -32,32 +50,26 @@ Setup
 	}
 ```
 
-2. **Add the dependency**
+2.  **Add the dependency**
+
 ```gradle
 	dependencies {
-      		 implementation 'com.github.1951FDG:Android-Multi-Select-Dialog:v2.2'
+      		 implementation 'com.github.1951FDG:Android-Multi-Select-Dialog:v2.3'
 	}
 ```
 
-Usage
---------
+## Demo
 
-See Sample in SampleApplication
+For a working implementation of this project, see the `app/src/` folder.
 
-License
---------
+## Feedback
 
-    Copyright 2017 Abubakker Moallim
-    Copyright 2018 Derrick Croes
+Feel free to send us feedback by submitting an [issue](https://github.com/1951FDG/Android-Multi-Select-Dialog/issues/new). Bug reports, feature requests, patches, and well-wishes are always welcome.
 
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
+## Contributing
 
-       http://www.apache.org/licenses/LICENSE-2.0
+Pull requests are welcome. For major changes, please submit an issue first to discuss what you would like to change.
 
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
+## Attributions
+
+-   [Country Flags Icons](https://www.flaticon.com/packs/countrys-flags)
