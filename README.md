@@ -54,7 +54,7 @@ _Am I missing some essential feature?_
 
 ```gradle
 	dependencies {
-      		 implementation 'com.github.1951FDG:Android-Multi-Select-Dialog:v2.3'
+      		 implementation 'com.github.1951FDG:Android-Multi-Select-Dialog:v3.0'
 	}
 ```
 
