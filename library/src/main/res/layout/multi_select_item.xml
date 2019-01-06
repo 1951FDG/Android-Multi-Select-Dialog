@@ -2,44 +2,47 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/main_container_height"
-    android:background="?android:attr/selectableItemBackground"
-    android:orientation="horizontal">
+    android:layout_height="?attr/listPreferredItemHeight"
+    android:background="?attr/selectableItemBackground"
+    android:minHeight="@dimen/dialog_item_min_height"
+    android:orientation="horizontal"
+    android:paddingStart="?attr/listPreferredItemPaddingLeft"
+    android:paddingEnd="?attr/listPreferredItemPaddingRight"
+    tools:layout_height="@dimen/dialog_item_min_height">
 
     <ImageView
         android:id="@+id/dialog_item_icon"
-        android:layout_width="@dimen/dialog_item_icon_size"
-        android:layout_height="@dimen/dialog_item_icon_size"
+        android:layout_width="@dimen/dialog_item_image_size"
+        android:layout_height="@dimen/dialog_item_image_size"
         android:layout_gravity="center_vertical"
-        android:layout_marginStart="@dimen/dialog_item_icon_left_margin"
-        android:layout_marginLeft="@dimen/dialog_item_icon_left_margin"
-        android:layout_marginEnd="@dimen/dialog_item_icon_right_margin"
-        android:layout_marginRight="@dimen/dialog_item_icon_right_margin"
+        android:layout_marginStart="@dimen/dialog_item_left_margin"
         android:background="@drawable/icon_background_material"
         android:scaleType="centerCrop"
+        tools:ignore="ContentDescription"
         tools:srcCompat="@tools:sample/avatars" />
 
-        <TextView
-            android:id="@+id/dialog_item_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:includeFontPadding="false"
-            android:maxLines="1"
-            android:textSize="@dimen/font_size_subheading"
-            tools:ignore="SelectableText"
-            tools:text="@tools:sample/first_names" />
-
-    <CheckBox
-        android:id="@+id/dialog_item_checkbox"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/dialog_item_name"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginStart="@dimen/dialog_item_icon_right_margin"
-        android:layout_marginLeft="@dimen/dialog_item_icon_right_margin"
-        android:layout_marginEnd="@dimen/dialog_item_icon_left_margin"
-        android:layout_marginRight="@dimen/dialog_item_icon_left_margin"
+        android:layout_marginStart="@dimen/dialog_item_left_margin"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:textAppearance="?attr/textAppearanceListItem"
+        tools:ignore="SelectableText"
+        tools:text="@tools:sample/first_names"
+        tools:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+    <com.abdeveloper.library.MultiSelectCompoundButton
+        android:id="@+id/dialog_item_checkbox"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="@dimen/layout_margin"
+        android:layout_marginEnd="@dimen/layout_margin"
+        android:background="@drawable/btn_check_material"
         android:clickable="false" />
 </LinearLayout>

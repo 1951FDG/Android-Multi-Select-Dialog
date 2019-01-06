@@ -1,5 +1,6 @@
 # MultiSelectDialog v3
 
+[![API](https://img.shields.io/badge/API-17%2B-blue.svg)](https://android-arsenal.com/api?level=17)
 [![JitPack](https://img.shields.io/jitpack/v/1951FDG/Android-Multi-Select-Dialog.svg)](https://jitpack.io/#1951FDG/Android-Multi-Select-Dialog)
 
 A fast and efficient multi choice select DialogFragment with async search and text highlighting

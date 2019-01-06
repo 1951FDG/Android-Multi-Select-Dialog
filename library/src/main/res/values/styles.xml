@@ -10,6 +10,13 @@
         <item name="android:windowCloseOnTouchOutside">false</item>
 
         <item name="dialogCornerRadius">@dimen/dialog_corner_radius_material</item>
+
+        <!-- List attributes -->
+        <item name="listPreferredItemHeight">56dp</item>
+        <item name="listPreferredItemPaddingLeft">8dp</item>
+        <item name="listPreferredItemPaddingRight">8dp</item>
+        <item name="textAppearanceListItem">@style/TextAppearance.AppCompat.Subhead</item>
+
     </style>
 
 </resources>

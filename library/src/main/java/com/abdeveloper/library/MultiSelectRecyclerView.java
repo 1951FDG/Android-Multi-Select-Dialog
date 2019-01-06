@@ -3,12 +3,11 @@ package com.abdeveloper.library;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class RecyclerViewEmptySupport extends RecyclerView {
+public class MultiSelectRecyclerView extends RecyclerView {
     private View emptyView;
     private final AdapterDataObserver observer = new AdapterDataObserver() {
         @Override
@@ -27,15 +26,15 @@ public class RecyclerViewEmptySupport extends RecyclerView {
         }
     };
 
-    public RecyclerViewEmptySupport(@NonNull Context context) {
+    public MultiSelectRecyclerView(@NonNull Context context) {
         super(context);
     }
 
-    public RecyclerViewEmptySupport(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public MultiSelectRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public RecyclerViewEmptySupport(@NonNull Context context, @Nullable AttributeSet attrs, int defStyle) {
+    public MultiSelectRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
@@ -57,12 +56,14 @@ public class RecyclerViewEmptySupport extends RecyclerView {
         if (adapter != null) {
             adapter.registerAdapterDataObserver(observer);
         }
+    }
 
-        checkIfEmpty();
+    @Nullable
+    public View getEmptyView() {
+        return emptyView;
     }
 
     public void setEmptyView(@NonNull View view) {
         emptyView = view;
-        checkIfEmpty();
     }
 }

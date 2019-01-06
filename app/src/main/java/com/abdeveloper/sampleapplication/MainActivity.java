@@ -8,9 +8,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.abdeveloper.library.MultiSelectModel;
 import com.abdeveloper.library.MultiSelectDialog;
 import com.abdeveloper.library.MultiSelectDialog.SubmitCallbackListener;
-import com.abdeveloper.library.MultiSelectModel;
+import com.abdeveloper.library.MultiSelectable;
 
 import java.util.ArrayList;
 
@@ -24,41 +25,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private MultiSelectDialog multiSelectDialog;
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_activity);
-
-        Button button = findViewById(R.id.show_dialog);
-        button.setOnClickListener(this);
-
-        //preselected Ids of Country List
-        ArrayList<Integer> selectedCountries = new ArrayList<>(4);
-        selectedCountries.add(1);
-        selectedCountries.add(3);
-        selectedCountries.add(4);
-        selectedCountries.add(7);
-
-        Resources resources = getResources();
-        CharSequence[] countries = resources.getTextArray(R.array.pref_country_entries);
-        //List of Countries with Name and Id
-        ArrayList<MultiSelectModel> listOfCountries = getMultiSelectModels(countries);
-
-        multiSelectDialog = new MultiSelectDialog()
-                .hint(getResources().getString(R.string.multi_select_dialog_hint)) //setting hint for dialog
-                .title(getResources().getString(R.string.multi_select_dialog_title)) //setting title for dialog
-                .positiveText(getResources().getString(R.string.dialog_done_text))
-                .negativeText(getResources().getString(R.string.dialog_cancel_text))
-                .setMinSelectionLimit(0)
-                .setMaxSelectionLimit(listOfCountries.size())
-                .preSelectIDsList(selectedCountries) //List of ids that you need to be selected
-                .multiSelectList(listOfCountries) // the multi select model list with ids and name
-                .onSubmit(this);
-    }
-
     @SuppressWarnings({"MagicNumber", "OverlyLongMethod"})
-    private static ArrayList<MultiSelectModel> getMultiSelectModels(CharSequence[] countries) {
-        ArrayList<MultiSelectModel> listOfCountries = new ArrayList<>(62);
+    private static ArrayList<MultiSelectable> getMultiSelectModels(CharSequence[] countries) {
+        ArrayList<MultiSelectable> listOfCountries = new ArrayList<>(62);
         listOfCountries.add(new MultiSelectModel(0, new SpannableString(countries[0]), R.drawable.flag_al));
         listOfCountries.add(new MultiSelectModel(1, new SpannableString(countries[1]), R.drawable.flag_ar));
         listOfCountries.add(new MultiSelectModel(2, new SpannableString(countries[2]), R.drawable.flag_au));
@@ -125,16 +94,47 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.main_activity);
+
+        Button button = findViewById(R.id.show_dialog);
+        button.setOnClickListener(this);
+
+        //preselected Ids of Country List
+        ArrayList<Integer> selectedCountries = new ArrayList<>(4);
+        selectedCountries.add(1);
+        selectedCountries.add(3);
+        selectedCountries.add(4);
+        selectedCountries.add(7);
+
+        Resources resources = getResources();
+        CharSequence[] countries = resources.getTextArray(R.array.pref_country_entries);
+        //List of Countries with Name and Id
+        ArrayList<MultiSelectable> listOfCountries = getMultiSelectModels(countries);
+
+        multiSelectDialog = new MultiSelectDialog()
+                .hint(resources.getString(R.string.multi_select_dialog_hint)) //setting hint for dialog
+                .title(resources.getString(R.string.multi_select_dialog_title)) //setting title for dialog
+                .positiveText(resources.getString(R.string.dialog_done_text))
+                .negativeText(resources.getString(R.string.dialog_cancel_text))
+                .setMinSelectionLimit(0)
+                .setMaxSelectionLimit(listOfCountries.size())
+                .preSelectIDsList(selectedCountries) //List of ids that you need to be selected
+                .multiSelectList(listOfCountries) // the multi select model list with ids and name
+                .onSubmit(this);
+    }
+
+    @Override
     public void onClick(@NonNull View v) {
         multiSelectDialog.show(getSupportFragmentManager(), "multiSelectDialog");
     }
 
     @Override
     public void onSelected(@NonNull ArrayList<Integer> selectedIds, @NonNull ArrayList<String> selectedNames, @NonNull String dataString) {
-        //will return list of selected IDS
-        int size = selectedIds.size();
+        int size = selectedNames.size();
         for (int i = 0; i < size; i++) {
-            Toast.makeText(MainActivity.this, "Selected Ids : " + selectedIds.get(i) + '\n' +
+            Toast.makeText(this, "Selected Ids : " + selectedIds.get(i) + '\n' +
                     "Selected Names : " + selectedNames.get(i) + '\n' +
                     "DataString : " + dataString, Toast.LENGTH_SHORT).show();
         }
