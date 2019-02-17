@@ -23,19 +23,6 @@ _Am I missing some essential feature?_
 
 -   Submit an [issue](https://github.com/1951FDG/Android-Multi-Select-Dialog/issues/new) and let's make this app better together!
 
-## Apps using this library
-
--   [openpyn-nordvpn-juiceSSH](https://github.com/1951FDG/openpyn-nordvpn-juiceSSH)
-
-## Screenshots
-
-<img src="https://github.com/1951FDG/openpyn-nordvpn-juiceSSH/blob/master/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_02_1541723220359.png" width="50%">
-
-## Requirements
-
--   **Minimum Android SDK** `4.1 (API level 16)`
--   **Compile Android SDK** `9 (API level 28)`
-
 ## How to use
 
 1.  **Add the JitPack repository to your build file**
@@ -55,22 +42,39 @@ _Am I missing some essential feature?_
 
 ```gradle
 	dependencies {
-      		 implementation 'com.github.1951FDG:Android-Multi-Select-Dialog:v3.0'
+      		 implementation 'com.github.1951FDG:Android-Multi-Select-Dialog:v3.3'
 	}
 ```
 
+## Screenshots
+
+<img src="https://github.com/1951FDG/openpyn-nordvpn-juiceSSH/blob/master/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_02_1541723220359.png" width="50%">
+
 ## Demo
 
-For a working implementation of this project, see the `app/src/` folder.
+For a working implementation of this project, see the [`./app/src/main`](app/src/main) folder.
+
+## Requirements
+
+-   **Minimum Android SDK** `4.2 (API level 17)`
+-   **Compile Android SDK** `9 (API level 28)`
 
 ## Feedback
 
-Feel free to send us feedback by submitting an [issue](https://github.com/1951FDG/Android-Multi-Select-Dialog/issues/new). Bug reports, feature requests, patches, and well-wishes are always welcome.
+Feel free to send us feedback by submitting an [issue](https://github.com/1951FDG/openpyn-nordvpn-juiceSSH/issues/new). Bug reports, feature requests, patches, and well-wishes are always welcome.
 
-## Contributing
+> **Note**:
+> Pull requests are welcome. For major changes, please submit an issue first to discuss what you would like to change.
 
-Pull requests are welcome. For major changes, please submit an issue first to discuss what you would like to change.
+## Built with
+
+-   [SVG Cleaner](https://github.com/RazrFalcon/svgcleaner-gui)
+-   [Svg2VectorAndroid](https://github.com/1951FDG/Svg2VectorAndroid)
 
 ## Attributions
 
 -   [Country Flags Icons](https://www.flaticon.com/packs/countrys-flags)
+
+## Apps using this library
+
+-   [openpyn-nordvpn-juiceSSH](https://github.com/1951FDG/openpyn-nordvpn-juiceSSH)
