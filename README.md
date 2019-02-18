@@ -48,7 +48,7 @@ _Am I missing some essential feature?_
 
 ## Screenshots
 
-<img src="https://github.com/1951FDG/openpyn-nordvpn-juiceSSH/blob/master/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_02_1541723220359.png" width="50%">
+<img src="https://github.com/1951FDG/openpyn-nordvpn-juiceSSH/blob/master/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_02.png" width="50%">
 
 ## Demo
 
