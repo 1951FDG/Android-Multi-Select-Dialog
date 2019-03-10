@@ -23,44 +23,164 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.fragment.app.DialogFragment;
 
-public class MultiSelectDialog extends AppCompatDialogFragment implements Filterable,
-        ViewTreeObserver.OnGlobalLayoutListener,
-        SearchView.OnQueryTextListener,
-        View.OnClickListener,
+public class MultiSelectDialog extends AppCompatDialogFragment
+        implements Filterable, ViewTreeObserver.OnGlobalLayoutListener, SearchView.OnQueryTextListener, View.OnClickListener,
         MultiSelectViewHolder.SelectionCallbackListener {
-    private Collection<MultiSelectable> multiSelectItems;
-    private Collection<Integer> preSelectedIds;
-    private Collection<Integer> postSelectedIds;
-    private MultiSelectAdapter multiSelectAdapter;
-    // Default Values
-    private String hint = "";
-    private String title = "";
-    private String positiveText = "";
-    private String negativeText = "";
-    private SubmitCallbackListener submitCallbackListener;
-    private int minSelectionLimit = 1;
-    private String minSelectionMessage = "";
-    private int maxSelectionLimit;
-    private String maxSelectionMessage = "";
-    private int recyclerViewMinHeight;
-    private MultiSelectFilter multiSelectFilter;
 
-    @NonNull
-    public Collection<MultiSelectable> getMultiSelectItems() {
-        return (multiSelectItems != null) ? multiSelectItems : new ArrayList<MultiSelectable>(0);
-    }
+    protected class MultiSelectFilter extends Filter {
 
-    @NonNull
-    public List<MultiSelectable> getList() {
-        Collection<MultiSelectable> collection = getMultiSelectItems();
-        List<MultiSelectable> list = new ArrayList<>(collection.size());
-
-        for (MultiSelectable model : collection) {
-            MultiSelectable clone = model.clone();
-            list.add(clone);
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<MultiSelectable> list;
+            int queryLength = constraint.length();
+            if (queryLength > 0) {
+                Collection<MultiSelectable> collection = getMultiSelectItems();
+                list = new ArrayList<>(collection.size());
+                for (MultiSelectable model : collection) {
+                    CharSequence name = model.getName();
+                    String text = name.toString();
+                    String lowerCaseText = text.toLowerCase();
+                    int queryStart = lowerCaseText.indexOf(constraint.toString(), 0);
+                    int queryEnd = queryStart + queryLength;
+                    if (queryStart > -1) {
+                        MultiSelectable clone = model.clone();
+                        if (queryLength > 1) {
+                            if (clone instanceof Range) {
+                                ((Range) clone).setStart(queryStart);
+                                ((Range) clone).setEnd(queryEnd);
+                            }
+                        }
+                        list.add(clone);
+                    }
+                }
+            } else {
+                list = getList();
+            }
+            FilterResults results = new FilterResults();
+            results.count = list.size();
+            results.values = list;
+            return results;
         }
 
-        return list;
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            MultiSelectAdapter adapter = getAdapter();
+            if (adapter != null) {
+                adapter.submitList((List<MultiSelectable>) results.values);
+            }
+        }
+    }
+
+    public interface SubmitCallbackListener {
+
+        void onCancel();
+
+        void onSelected(@NonNull ArrayList<Integer> selectedIds, @NonNull ArrayList<String> selectedNames, @NonNull String dataString);
+    }
+
+    // Default Values
+    private String hint = "";
+
+    private int maxSelectionLimit;
+
+    private String maxSelectionMessage = "";
+
+    private int minSelectionLimit = 1;
+
+    private String minSelectionMessage = "";
+
+    private MultiSelectAdapter multiSelectAdapter;
+
+    private MultiSelectFilter multiSelectFilter;
+
+    private Collection<MultiSelectable> multiSelectItems;
+
+    private String negativeText = "";
+
+    private String positiveText = "";
+
+    private Collection<Integer> postSelectedIds;
+
+    private Collection<Integer> preSelectedIds;
+
+    private int recyclerViewMinHeight;
+
+    private SubmitCallbackListener submitCallbackListener;
+
+    private String title = "";
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (recyclerViewMinHeight == 0) {
+            if (title.isEmpty()) {
+                setStyle(DialogFragment.STYLE_NO_TITLE, R.style.FullScreenDialogStyle);
+
+            } else {
+                setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
+            }
+            multiSelectAdapter = new MultiSelectAdapter(this);
+            multiSelectAdapter.setHasStableIds(true);
+            multiSelectAdapter.submitList(getList());
+        }
+    }
+
+    @Nullable
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.multi_select_dialog, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        MultiSelectRecyclerView recyclerView = view.findViewById(R.id.recycler_view);
+        recyclerView.setAdapter(multiSelectAdapter);
+        recyclerView.setEmptyView(view.findViewById(R.id.stub));
+        recyclerView.setHasFixedSize(true);
+        if (recyclerViewMinHeight == 0) {
+            ViewTreeObserver observer = recyclerView.getViewTreeObserver();
+            observer.addOnGlobalLayoutListener(this);
+        } else {
+            recyclerView.setMinimumHeight(recyclerViewMinHeight);
+        }
+        SearchView searchView = view.findViewById(R.id.search_view);
+        searchView.setOnQueryTextListener(this);
+        searchView.onActionViewExpanded();
+        searchView.clearFocus();
+        TextView dialogSubmit = view.findViewById(R.id.done);
+        dialogSubmit.setOnClickListener(this);
+        TextView dialogCancel = view.findViewById(R.id.cancel);
+        dialogCancel.setOnClickListener(this);
+        if (!hint.isEmpty()) {
+            searchView.setQueryHint(hint);
+        }
+        if (!positiveText.isEmpty()) {
+            dialogSubmit.setText(positiveText);
+        }
+        if (!negativeText.isEmpty()) {
+            dialogCancel.setText(negativeText);
+        }
+    }
+
+    @Override
+    public void onStart() {
+        Dialog dialog = getDialog();
+        Window window = dialog.getWindow();
+        if (window == null) {
+            throw new NullPointerException();
+        }
+        if (!title.isEmpty()) {
+            dialog.setTitle(title);
+        }
+        WindowManager.LayoutParams attrs = window.getAttributes();
+        attrs.width = LayoutParams.MATCH_PARENT;
+        window.setAttributes(attrs);
+        super.onStart();
+    }
+
+    @Override
+    public boolean addToSelection(@NonNull Integer id) {
+        return postSelectedIds.add(id);
     }
 
     @Nullable
@@ -76,126 +196,102 @@ public class MultiSelectDialog extends AppCompatDialogFragment implements Filter
         return multiSelectFilter;
     }
 
+    @NonNull
+    public List<MultiSelectable> getList() {
+        Collection<MultiSelectable> collection = getMultiSelectItems();
+        List<MultiSelectable> list = new ArrayList<>(collection.size());
+        for (MultiSelectable model : collection) {
+            MultiSelectable clone = model.clone();
+            list.add(clone);
+        }
+        return list;
+    }
+
+    @NonNull
+    public Collection<MultiSelectable> getMultiSelectItems() {
+        return (multiSelectItems != null) ? multiSelectItems : new ArrayList<MultiSelectable>(0);
+    }
+
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public boolean isSelected(@NonNull Integer id) {
+        return postSelectedIds.contains(id);
+    }
 
-        if (recyclerViewMinHeight == 0) {
-            if (title.isEmpty()) {
-                setStyle(DialogFragment.STYLE_NO_TITLE, R.style.FullScreenDialogStyle);
-
+    @Override
+    public void onClick(@NonNull View v) {
+        if (v.getId() == R.id.done) {
+            Resources resources = getResources();
+            int size = postSelectedIds.size();
+            if (size >= minSelectionLimit) {
+                if (size <= maxSelectionLimit) {
+                    // to remember last selected ids which were successfully done
+                    preSelectedIds = Collections.unmodifiableCollection(postSelectedIds);
+                    if (submitCallbackListener != null) {
+                        ArrayList<Integer> selectedIds = new ArrayList<>(postSelectedIds);
+                        ArrayList<String> selectedNames = getSelectNameList(getMultiSelectItems());
+                        String dataString = getSelectedDataString(getMultiSelectItems());
+                        submitCallbackListener.onSelected(selectedIds, selectedNames, dataString);
+                    }
+                    dismiss();
+                } else {
+                    String youCan = resources.getString(R.string.you_can_only_select_up_to);
+                    showMessage(resources, youCan, maxSelectionMessage, maxSelectionLimit);
+                }
             } else {
-                setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
+                String pleaseSelect = resources.getString(R.string.please_select_at_least);
+                showMessage(resources, pleaseSelect, minSelectionMessage, minSelectionLimit);
             }
-
-            multiSelectAdapter = new MultiSelectAdapter(this);
-            multiSelectAdapter.setHasStableIds(true);
-            multiSelectAdapter.submitList(getList());
         }
-    }
-
-    @Nullable
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.multi_select_dialog, container, false);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        MultiSelectRecyclerView recyclerView = view.findViewById(R.id.recycler_view);
-        recyclerView.setAdapter(multiSelectAdapter);
-        recyclerView.setEmptyView(view.findViewById(R.id.stub));
-        recyclerView.setHasFixedSize(true);
-
-        if (recyclerViewMinHeight == 0) {
-            ViewTreeObserver observer = recyclerView.getViewTreeObserver();
-            observer.addOnGlobalLayoutListener(this);
-        } else {
-            recyclerView.setMinimumHeight(recyclerViewMinHeight);
-        }
-
-        SearchView searchView = view.findViewById(R.id.search_view);
-        searchView.setOnQueryTextListener(this);
-        searchView.onActionViewExpanded();
-        searchView.clearFocus();
-
-        TextView dialogSubmit = view.findViewById(R.id.done);
-        dialogSubmit.setOnClickListener(this);
-
-        TextView dialogCancel = view.findViewById(R.id.cancel);
-        dialogCancel.setOnClickListener(this);
-
-        if (!hint.isEmpty()) {
-            searchView.setQueryHint(hint);
-        }
-        if (!positiveText.isEmpty()) {
-            dialogSubmit.setText(positiveText);
-        }
-        if (!negativeText.isEmpty()) {
-            dialogCancel.setText(negativeText);
+        if (v.getId() == R.id.cancel) {
+            if (submitCallbackListener != null) {
+                postSelectedIds.clear();
+                postSelectedIds.addAll(preSelectedIds);
+                submitCallbackListener.onCancel();
+            }
+            dismiss();
         }
     }
 
     @Override
-    public void onStart() {
+    public void onGlobalLayout() {
         Dialog dialog = getDialog();
-
         Window window = dialog.getWindow();
         if (window == null) {
             throw new NullPointerException();
         }
-
-        if (!title.isEmpty()) {
-            dialog.setTitle(title);
+        MultiSelectRecyclerView recyclerView = window.findViewById(R.id.recycler_view);
+        if (recyclerView == null) {
+            throw new NullPointerException();
         }
+        recyclerViewMinHeight = recyclerView.getHeight();
+        recyclerView.setMinimumHeight(recyclerViewMinHeight);
+        ViewTreeObserver observer = recyclerView.getViewTreeObserver();
+        observer.removeOnGlobalLayoutListener(this);
+    }
 
-        WindowManager.LayoutParams attrs = window.getAttributes();
-        attrs.width = LayoutParams.MATCH_PARENT;
-        window.setAttributes(attrs);
+    @Override
+    public boolean onQueryTextChange(@NonNull String newText) {
+        if (isVisible()) {
+            String lowerCaseQuery = newText.toLowerCase();
+            Filter filter = getFilter();
+            filter.filter(lowerCaseQuery, null);
+        }
+        return true;
+    }
 
-        super.onStart();
+    @Override
+    public boolean onQueryTextSubmit(@NonNull String query) {
+        return false;
+    }
+
+    @Override
+    public boolean removeFromSelection(@NonNull Integer id) {
+        return postSelectedIds.remove(id);
     }
 
     @NonNull
-    public MultiSelectDialog hint(@NonNull String str) {
+    public MultiSelectDialog setHint(@NonNull String str) {
         hint = str;
-        return this;
-    }
-
-    @NonNull
-    public MultiSelectDialog title(@NonNull String str) {
-        title = str;
-        return this;
-    }
-
-    @NonNull
-    public MultiSelectDialog positiveText(@NonNull String message) {
-        positiveText = message;
-        return this;
-    }
-
-    @NonNull
-    public MultiSelectDialog negativeText(@NonNull String message) {
-        negativeText = message;
-        return this;
-    }
-
-    @NonNull
-    public MultiSelectDialog preSelectIDsList(@NonNull Collection<Integer> list) {
-        postSelectedIds = Collections.checkedSortedSet(new TreeSet<>(list), Integer.class);
-        preSelectedIds = Collections.unmodifiableCollection(postSelectedIds);
-        return this;
-    }
-
-    @NonNull
-    public MultiSelectDialog multiSelectList(@NonNull Collection<MultiSelectable> list) {
-        multiSelectItems = Collections.unmodifiableCollection(list);
-
-        if (maxSelectionLimit == 0) {
-            maxSelectionLimit = list.size();
-        }
         return this;
     }
 
@@ -224,26 +320,56 @@ public class MultiSelectDialog extends AppCompatDialogFragment implements Filter
     }
 
     @NonNull
-    public MultiSelectDialog onSubmit(@Nullable SubmitCallbackListener callback) {
+    public MultiSelectDialog setMultiSelectList(@NonNull Collection<MultiSelectable> list) {
+        multiSelectItems = Collections.unmodifiableCollection(list);
+        if (maxSelectionLimit == 0) {
+            maxSelectionLimit = list.size();
+        }
+        return this;
+    }
+
+    @NonNull
+    public MultiSelectDialog setNegativeText(@NonNull String message) {
+        negativeText = message;
+        return this;
+    }
+
+    @NonNull
+    public MultiSelectDialog setPositiveText(@NonNull String message) {
+        positiveText = message;
+        return this;
+    }
+
+    @NonNull
+    public MultiSelectDialog setPreSelectIDsList(@NonNull Collection<Integer> list) {
+        postSelectedIds = Collections.checkedSortedSet(new TreeSet<>(list), Integer.class);
+        preSelectedIds = Collections.unmodifiableCollection(postSelectedIds);
+        return this;
+    }
+
+    @NonNull
+    public MultiSelectDialog setSubmitListener(@Nullable SubmitCallbackListener callback) {
         submitCallbackListener = callback;
         return this;
     }
 
-    private void showMessage(Resources resources, String s, String selectionMessage, int selectionLimit) {
-        String options = resources.getString(R.string.options);
-        String option = resources.getString(R.string.option);
-        String message = selectionMessage;
+    @NonNull
+    public MultiSelectDialog setTitle(@NonNull String str) {
+        title = str;
+        return this;
+    }
 
-        if (message.isEmpty()) {
-            if (selectionLimit > 1) {
-                message = s + ' ' + selectionLimit + ' ' + options;
-            } else {
-                message = s + ' ' + selectionLimit + ' ' + option;
+    private ArrayList<String> getSelectNameList(Collection<MultiSelectable> list) {
+        ArrayList<String> names = new ArrayList<>(list.size());
+        for (MultiSelectable model : list) {
+            int id = model.getId();
+            if (postSelectedIds.contains(id)) {
+                CharSequence name = model.getName();
+                String str = name.toString();
+                names.add(str);
             }
         }
-
-        Toast toast = Toast.makeText(getActivity(), message, Toast.LENGTH_LONG);
-        toast.show();
+        return names;
     }
 
     private String getSelectedDataString(Collection<MultiSelectable> list) {
@@ -260,165 +386,18 @@ public class MultiSelectDialog extends AppCompatDialogFragment implements Filter
         return (data.length() > 0) ? data.substring(1) : "";
     }
 
-    private ArrayList<String> getSelectNameList(Collection<MultiSelectable> list) {
-        ArrayList<String> names = new ArrayList<>(list.size());
-        for (MultiSelectable model : list) {
-            int id = model.getId();
-            if (postSelectedIds.contains(id)) {
-                CharSequence name = model.getName();
-                String str = name.toString();
-                names.add(str);
-            }
-        }
-        return names;
-    }
-
-    @Override
-    public void onGlobalLayout() {
-        Dialog dialog = getDialog();
-
-        Window window = dialog.getWindow();
-        if (window == null) {
-            throw new NullPointerException();
-        }
-
-        MultiSelectRecyclerView recyclerView = window.findViewById(R.id.recycler_view);
-        if (recyclerView == null) {
-            throw new NullPointerException();
-        }
-
-        recyclerViewMinHeight = recyclerView.getHeight();
-        recyclerView.setMinimumHeight(recyclerViewMinHeight);
-
-        ViewTreeObserver observer = recyclerView.getViewTreeObserver();
-        observer.removeOnGlobalLayoutListener(this);
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(@NonNull String query) {
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(@NonNull String newText) {
-        if (isVisible()) {
-            String lowerCaseQuery = newText.toLowerCase();
-            Filter filter = getFilter();
-            filter.filter(lowerCaseQuery, null);
-        }
-
-        return true;
-    }
-
-    @Override
-    public void onClick(@NonNull View v) {
-        if (v.getId() == R.id.done) {
-            Resources resources = getResources();
-            int size = postSelectedIds.size();
-            if (size >= minSelectionLimit) {
-                if (size <= maxSelectionLimit) {
-                    // to remember last selected ids which were successfully done
-                    preSelectedIds = Collections.unmodifiableCollection(postSelectedIds);
-
-                    if (submitCallbackListener != null) {
-                        ArrayList<Integer> selectedIds = new ArrayList<>(postSelectedIds);
-                        ArrayList<String> selectedNames = getSelectNameList(getMultiSelectItems());
-                        String dataString = getSelectedDataString(getMultiSelectItems());
-                        submitCallbackListener.onSelected(selectedIds, selectedNames, dataString);
-                    }
-
-                    dismiss();
-                } else {
-                    String youCan = resources.getString(R.string.you_can_only_select_up_to);
-                    showMessage(resources, youCan, maxSelectionMessage, maxSelectionLimit);
-                }
+    private void showMessage(Resources resources, String s, String selectionMessage, int selectionLimit) {
+        String options = resources.getString(R.string.options);
+        String option = resources.getString(R.string.option);
+        String message = selectionMessage;
+        if (message.isEmpty()) {
+            if (selectionLimit > 1) {
+                message = s + ' ' + selectionLimit + ' ' + options;
             } else {
-                String pleaseSelect = resources.getString(R.string.please_select_at_least);
-                showMessage(resources, pleaseSelect, minSelectionMessage, minSelectionLimit);
+                message = s + ' ' + selectionLimit + ' ' + option;
             }
         }
-
-        if (v.getId() == R.id.cancel) {
-            if (submitCallbackListener != null) {
-                postSelectedIds.clear();
-                postSelectedIds.addAll(preSelectedIds);
-
-                submitCallbackListener.onCancel();
-            }
-
-            dismiss();
-        }
-    }
-
-    @Override
-    public boolean isSelected(@NonNull Integer id) {
-        return postSelectedIds.contains(id);
-    }
-
-    @Override
-    public boolean addToSelection(@NonNull Integer id) {
-        return postSelectedIds.add(id);
-    }
-
-    @Override
-    public boolean removeFromSelection(@NonNull Integer id) {
-        return postSelectedIds.remove(id);
-    }
-
-    public interface SubmitCallbackListener {
-        void onSelected(@NonNull ArrayList<Integer> selectedIds, @NonNull ArrayList<String> selectedNames, @NonNull String dataString);
-
-        void onCancel();
-    }
-
-    protected class MultiSelectFilter extends Filter {
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            List<MultiSelectable> list;
-
-            int queryLength = constraint.length();
-            if (queryLength > 0) {
-                Collection<MultiSelectable> collection = getMultiSelectItems();
-                list = new ArrayList<>(collection.size());
-
-                for (MultiSelectable model : collection) {
-                    CharSequence name = model.getName();
-
-                    String text = name.toString();
-                    String lowerCaseText = text.toLowerCase();
-                    int queryStart = lowerCaseText.indexOf(constraint.toString(), 0);
-                    int queryEnd = queryStart + queryLength;
-
-                    if (queryStart > -1) {
-                        MultiSelectable clone = model.clone();
-
-                        if (queryLength > 1) {
-                            if (clone instanceof Range) {
-                                ((Range) clone).setStart(queryStart);
-                                ((Range) clone).setEnd(queryEnd);
-                            }
-                        }
-
-                        list.add(clone);
-                    }
-                }
-            } else {
-                list = getList();
-            }
-
-            FilterResults results = new FilterResults();
-            results.count = list.size();
-            results.values = list;
-
-            return results;
-        }
-
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            MultiSelectAdapter adapter = getAdapter();
-            if (adapter != null) {
-                adapter.submitList((List<MultiSelectable>) results.values);
-            }
-        }
+        Toast toast = Toast.makeText(getActivity(), message, Toast.LENGTH_LONG);
+        toast.show();
     }
 }

@@ -8,7 +8,9 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class MultiSelectRecyclerView extends RecyclerView {
+
     private View emptyView;
+
     private final AdapterDataObserver observer = new AdapterDataObserver() {
         @Override
         public void onChanged() {
@@ -46,6 +48,15 @@ public class MultiSelectRecyclerView extends RecyclerView {
         }
     }
 
+    @Nullable
+    public View getEmptyView() {
+        return emptyView;
+    }
+
+    public void setEmptyView(@NonNull View view) {
+        emptyView = view;
+    }
+
     @Override
     public void setAdapter(@Nullable Adapter adapter) {
         Adapter oldAdapter = getAdapter();
@@ -56,14 +67,5 @@ public class MultiSelectRecyclerView extends RecyclerView {
         if (adapter != null) {
             adapter.registerAdapterDataObserver(observer);
         }
-    }
-
-    @Nullable
-    public View getEmptyView() {
-        return emptyView;
-    }
-
-    public void setEmptyView(@NonNull View view) {
-        emptyView = view;
     }
 }

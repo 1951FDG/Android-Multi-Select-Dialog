@@ -20,18 +20,15 @@ class MultiSelectItemCallback extends DiffUtil.ItemCallback<MultiSelectable> {
             int end = ((Range) oldItem).getEnd();
             return ((start == ((Range) newItem).getStart()) && (end == ((Range) newItem).getEnd()));
         }
-
         return true;
     }
 
     public Object getChangePayload(@NonNull MultiSelectable oldItem, @NonNull MultiSelectable newItem) {
         Bundle payload = new Bundle();
-
         if (newItem instanceof Range) {
             int[] value = { ((Range) newItem).getStart(), ((Range) newItem).getEnd() };
             payload.putIntArray(SPAN, value);
         }
-
         return payload;
     }
 }
