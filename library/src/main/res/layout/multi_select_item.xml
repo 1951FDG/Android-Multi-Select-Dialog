@@ -7,7 +7,9 @@
     android:minHeight="@dimen/dialog_item_min_height"
     android:orientation="horizontal"
     android:paddingStart="?attr/listPreferredItemPaddingLeft"
+    android:paddingLeft="?attr/listPreferredItemPaddingLeft"
     android:paddingEnd="?attr/listPreferredItemPaddingRight"
+    android:paddingRight="?attr/listPreferredItemPaddingRight"
     tools:layout_height="@dimen/dialog_item_min_height">
 
     <ImageView
@@ -15,6 +17,7 @@
         android:layout_width="@dimen/dialog_item_image_size"
         android:layout_height="@dimen/dialog_item_image_size"
         android:layout_gravity="center_vertical"
+        android:layout_marginLeft="@dimen/dialog_item_left_margin"
         android:layout_marginStart="@dimen/dialog_item_left_margin"
         android:background="@drawable/icon_background_material"
         android:scaleType="centerCrop"
@@ -26,6 +29,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:layout_marginLeft="@dimen/dialog_item_left_margin"
         android:layout_marginStart="@dimen/dialog_item_left_margin"
         android:layout_weight="1"
         android:ellipsize="end"
@@ -42,6 +46,8 @@
         android:layout_height="32dp"
         android:layout_gravity="center_vertical"
         android:layout_marginEnd="@dimen/layout_margin"
+        android:layout_marginLeft="@dimen/layout_margin"
+        android:layout_marginRight="@dimen/layout_margin"
         android:layout_marginStart="@dimen/layout_margin"
         android:background="@drawable/btn_check_material"
         android:clickable="false" />

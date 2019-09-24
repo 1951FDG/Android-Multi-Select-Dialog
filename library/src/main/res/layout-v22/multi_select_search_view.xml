@@ -7,4 +7,6 @@
     android:layout_margin="@dimen/layout_margin"
     android:iconifiedByDefault="true"
     android:inputType="textCapSentences|textAutoComplete|textNoSuggestions"
+    android:searchHintIcon="@null"
+    android:searchIcon="@null"
     tools:showIn="@layout/multi_select_dialog" />
