@@ -74,7 +74,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    @SuppressWarnings({ "MagicNumber", "OverlyLongMethod" })
     private ArrayList<MultiSelectable> getMultiSelectModels(CharSequence[] countries, @ArrayRes int id) {
         Resources res = getResources();
         TypedArray icons = res.obtainTypedArray(id);

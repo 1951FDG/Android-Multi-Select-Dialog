@@ -40,7 +40,7 @@ public class MultiSelectDialog extends AppCompatDialogFragment
                     CharSequence name = model.getName();
                     String text = name.toString();
                     String lowerCaseText = text.toLowerCase();
-                    int queryStart = lowerCaseText.indexOf(constraint.toString(), 0);
+                    int queryStart = lowerCaseText.indexOf(constraint.toString());
                     int queryEnd = queryStart + queryLength;
                     if (queryStart > -1) {
                         MultiSelectable clone = model.clone();
@@ -188,6 +188,7 @@ public class MultiSelectDialog extends AppCompatDialogFragment
         return multiSelectAdapter;
     }
 
+    @NonNull
     @Override
     public Filter getFilter() {
         if (multiSelectFilter == null) {
