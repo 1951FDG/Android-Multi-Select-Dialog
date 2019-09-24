@@ -56,8 +56,8 @@ For a working implementation of this project, see the [`./app/src/main`](app/src
 
 ## Requirements
 
--   **Minimum Android SDK** `4.2 (API level 17)`
--   **Compile Android SDK** `9 (API level 28)`
+-   **Minimum Android SDK** `4.1 (API level 16)`
+-   **Compile Android SDK** `10 (API level 29)`
 
 ## Feedback
 
