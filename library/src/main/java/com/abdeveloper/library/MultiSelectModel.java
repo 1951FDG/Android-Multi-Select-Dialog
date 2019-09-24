@@ -5,18 +5,18 @@ import android.text.SpannableString;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-@SuppressWarnings("ParameterHidesMemberVariable")
+@SuppressWarnings({ "ParameterHidesMemberVariable", "TransientFieldInNonSerializableClass" })
 public class MultiSelectModel implements MultiSelectable, Iconifiable, Range {
 
-    private int end;
+    private transient int end;
 
     private final int id;
 
     private CharSequence name;
 
-    private final int resId;
+    private final transient int resId;
 
-    private int start;
+    private transient int start;
 
     public MultiSelectModel(int id, @NonNull CharSequence name) {
         this(id, name, 0);
@@ -26,6 +26,12 @@ public class MultiSelectModel implements MultiSelectable, Iconifiable, Range {
         this.id = id;
         this.resId = resId;
         this.name = name;
+    }
+
+    @SuppressWarnings("unused")
+    private MultiSelectModel() {
+        id = 0;
+        resId = 0;
     }
 
     @Nullable
@@ -67,7 +73,7 @@ public class MultiSelectModel implements MultiSelectable, Iconifiable, Range {
 
     @Override
     public void setName(@NonNull CharSequence charSequence) {
-        this.name = charSequence;
+        name = charSequence;
     }
 
     @Override
