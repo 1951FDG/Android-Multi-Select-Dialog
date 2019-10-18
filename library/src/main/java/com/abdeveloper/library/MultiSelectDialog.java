@@ -127,6 +127,10 @@ public class MultiSelectDialog extends AppCompatDialogFragment
 
     @Nullable
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Dialog dialog = getDialog();
+        if (!title.isEmpty()) {
+            dialog.setTitle(title);
+        }
         return inflater.inflate(R.layout.multi_select_dialog, container, false);
     }
 
@@ -160,22 +164,6 @@ public class MultiSelectDialog extends AppCompatDialogFragment
         if (!negativeText.isEmpty()) {
             dialogCancel.setText(negativeText);
         }
-    }
-
-    @Override
-    public void onStart() {
-        Dialog dialog = getDialog();
-        Window window = dialog.getWindow();
-        if (window == null) {
-            throw new NullPointerException();
-        }
-        if (!title.isEmpty()) {
-            dialog.setTitle(title);
-        }
-        WindowManager.LayoutParams attrs = window.getAttributes();
-        attrs.width = LayoutParams.MATCH_PARENT;
-        window.setAttributes(attrs);
-        super.onStart();
     }
 
     @Override
