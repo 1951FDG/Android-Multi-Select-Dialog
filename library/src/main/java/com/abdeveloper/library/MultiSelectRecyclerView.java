@@ -14,17 +14,17 @@ public class MultiSelectRecyclerView extends RecyclerView {
     private final AdapterDataObserver observer = new AdapterDataObserver() {
         @Override
         public void onChanged() {
-            checkIfEmpty();
+            updateEmptyStatus(getAdapter().getItemCount() == 0);
         }
 
         @Override
         public void onItemRangeInserted(int positionStart, int itemCount) {
-            checkIfEmpty();
+            updateEmptyStatus(getAdapter().getItemCount() == 0);
         }
 
         @Override
         public void onItemRangeRemoved(int positionStart, int itemCount) {
-            checkIfEmpty();
+            updateEmptyStatus(getAdapter().getItemCount() == 0);
         }
     };
 
@@ -40,11 +40,19 @@ public class MultiSelectRecyclerView extends RecyclerView {
         super(context, attrs, defStyle);
     }
 
-    public void checkIfEmpty() {
-        Adapter adapter = getAdapter();
-        if ((emptyView != null) && (adapter != null)) {
-            boolean emptyViewVisible = adapter.getItemCount() == 0;
-            emptyView.setVisibility(emptyViewVisible ? VISIBLE : GONE);
+    public void updateEmptyStatus(boolean empty) {
+        if (empty) {
+            if (emptyView != null) {
+                emptyView.setVisibility(View.VISIBLE);
+                setVisibility(View.INVISIBLE);
+            } else {
+                setVisibility(View.VISIBLE);
+            }
+        } else {
+            if (emptyView != null) {
+                emptyView.setVisibility(View.GONE);
+            }
+            setVisibility(View.VISIBLE);
         }
     }
 
@@ -53,8 +61,11 @@ public class MultiSelectRecyclerView extends RecyclerView {
         return emptyView;
     }
 
-    public void setEmptyView(@NonNull View view) {
+    public void setEmptyView(@Nullable View view) {
         emptyView = view;
+        Adapter adapter = getAdapter();
+        boolean empty = (adapter == null) || (adapter.getItemCount() == 0);
+        updateEmptyStatus(empty);
     }
 
     @Override

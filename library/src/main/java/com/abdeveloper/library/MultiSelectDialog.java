@@ -6,10 +6,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.view.ViewTreeObserver;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.SearchView;
@@ -99,9 +97,9 @@ public class MultiSelectDialog extends AppCompatDialogFragment
 
     private String positiveText = "";
 
-    private Collection<Integer> postSelectedIds;
+    private Collection<Integer> postSelectedIds = Collections.emptyList();
 
-    private Collection<Integer> preSelectedIds;
+    private Collection<Integer> preSelectedIds = Collections.emptyList();
 
     private int recyclerViewMinHeight;
 

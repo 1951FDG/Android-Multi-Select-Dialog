@@ -47,7 +47,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .setHint(resources.getString(R.string.multi_select_dialog_hint)) //setting hint for dialog
                 .setTitle(resources.getString(R.string.multi_select_dialog_title)) //setting title for dialog
                 .setPositiveText(resources.getString(R.string.dialog_done_text))
-                .setNegativeText(resources.getString(R.string.dialog_cancel_text)).setMinSelectionLimit(0)
+                .setNegativeText(resources.getString(R.string.dialog_cancel_text))
+                .setMinSelectionLimit(0)
                 .setMaxSelectionLimit(listOfCountries.size())
                 .setPreSelectIDsList(selectedCountries) //List of ids that you need to be selected
                 .setMultiSelectList(listOfCountries) // the multi select model list with ids and name

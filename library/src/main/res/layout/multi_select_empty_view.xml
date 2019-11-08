@@ -2,7 +2,10 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/empty_view"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:minHeight="@dimen/dialog_item_min_height"
+    android:padding="8dp"
     android:text="@string/list_empty"
     tools:ignore="UnusedIds" />
