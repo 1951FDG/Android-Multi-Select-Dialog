@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
@@ -20,6 +19,7 @@ import java.util.List;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.recyclerview.widget.ListAdapter;
 
 class MultiSelectAdapter extends ListAdapter<MultiSelectable, MultiSelectViewHolder> {
@@ -64,7 +64,7 @@ class MultiSelectAdapter extends ListAdapter<MultiSelectable, MultiSelectViewHol
         View root = inflater.inflate(viewHolderResId, parent, false);
         ImageView imageView = root.findViewById(R.id.dialog_item_icon);
         TextView textView = root.findViewById(R.id.dialog_item_name);
-        CompoundButton checkBox = root.findViewById(R.id.dialog_item_checkbox);
+        AppCompatCheckBox checkBox = root.findViewById(R.id.dialog_item_checkbox);
         TypedValue outValue = new TypedValue();
         Resources.Theme theme = context.getTheme();
         theme.resolveAttribute(R.attr.colorAccent, outValue, true);
@@ -115,7 +115,7 @@ class MultiSelectAdapter extends ListAdapter<MultiSelectable, MultiSelectViewHol
         textView.setTextAppearance(textView.getContext(), textAppearanceListItem);
         root.addView(textView);
         textView.setLayoutParams(textViewParams);
-        CompoundButton checkBox = new MultiSelectCompoundButton(context);
+        AppCompatCheckBox checkBox = new AppCompatCheckBox(context);
         LinearLayout.LayoutParams checkBoxParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         checkBoxParams.width = resources.getDimensionPixelSize(R.dimen.dialog_item_button_size);
         checkBoxParams.height = resources.getDimensionPixelSize(R.dimen.dialog_item_button_size);

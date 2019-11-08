@@ -14,12 +14,9 @@
      limitations under the License.
 -->
 
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/checked"
-        android:state_checked="true"
-        android:drawable="@drawable/btn_checkbox_checked_material" />
-    <item
-        android:id="@+id/unchecked"
-        android:drawable="@drawable/btn_checkbox_unchecked_material" />
+<selector xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:state_enabled="false" android:color="?attr/colorControlNormal" app:alpha="?android:disabledAlpha"/>
+    <item android:state_checked="true" android:color="?attr/colorControlActivated"/>
+    <item android:color="?attr/colorControlNormal"/>
 </selector>
