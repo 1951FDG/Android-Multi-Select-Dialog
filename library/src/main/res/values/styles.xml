@@ -6,12 +6,10 @@
         <item name="android:windowSoftInputMode">stateUnspecified|adjustResize</item>
         <item name="android:windowCloseOnTouchOutside">false</item>
 
-        <item name="dialogCornerRadius">@dimen/dialog_corner_radius_material</item>
-
         <!-- List attributes -->
-        <item name="listPreferredItemHeight">56dp</item>
-        <item name="listPreferredItemPaddingLeft">8dp</item>
-        <item name="listPreferredItemPaddingRight">8dp</item>
+        <item name="listPreferredItemHeight">@dimen/dialog_item_min_height</item>
+        <item name="listPreferredItemPaddingStart">?attr/dialogPreferredPadding</item>
+        <item name="listPreferredItemPaddingEnd">?attr/dialogPreferredPadding</item>
         <item name="textAppearanceListItem">@style/TextAppearance.AppCompat.Subhead</item>
 
     </style>

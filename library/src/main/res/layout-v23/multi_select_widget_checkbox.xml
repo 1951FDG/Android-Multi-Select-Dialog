@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CheckBox xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/dialog_item_checkbox"
     android:layout_width="24dp"
     android:layout_height="24dp"
     android:layout_gravity="center_vertical"
     android:background="@null"
+    android:button="@drawable/btn_check_material"
+    android:buttonTint="@color/control_checkable_material"
     android:clickable="false"
-    android:focusable="false"
-    app:buttonCompat="@drawable/btn_check_material" />
+    android:focusable="false" />

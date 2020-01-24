@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:minHeight="@dimen/dialog_item_min_height"
+    android:minHeight="?attr/listPreferredItemHeight"
     android:padding="8dp"
     android:text="@string/list_empty"
     tools:ignore="UnusedIds" />

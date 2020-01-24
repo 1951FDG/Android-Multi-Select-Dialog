@@ -4,7 +4,7 @@
     android:id="@+id/search_view"
     android:layout_width="match_parent"
     android:layout_height="48dp"
-    android:layout_margin="@dimen/layout_margin"
+    android:layout_margin="8dp"
     android:iconifiedByDefault="true"
     android:inputType="textCapSentences|textAutoComplete|textNoSuggestions"
     android:searchHintIcon="@null"

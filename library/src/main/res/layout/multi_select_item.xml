@@ -5,19 +5,20 @@
     android:layout_height="?attr/listPreferredItemHeight"
     android:background="?attr/selectableItemBackground"
     android:clipToPadding="false"
-    android:minHeight="@dimen/dialog_item_min_height"
+    android:minHeight="?attr/listPreferredItemHeight"
     android:orientation="horizontal"
-    android:paddingStart="?attr/dialogPreferredPadding"
-    android:paddingLeft="?attr/dialogPreferredPadding"
+    android:paddingStart="?attr/listPreferredItemPaddingStart"
+    android:paddingEnd="?attr/listPreferredItemPaddingEnd"
     tools:layout_height="@dimen/dialog_item_min_height">
 
     <ImageView
         android:id="@+id/dialog_item_icon"
-        android:layout_width="@dimen/dialog_item_image_size"
-        android:layout_height="@dimen/dialog_item_image_size"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_gravity="center_vertical"
+        android:adjustViewBounds="true"
         android:background="@drawable/icon_background_material"
-        android:scaleType="centerCrop"
+        android:scaleType="center"
         tools:ignore="ContentDescription"
         tools:srcCompat="@tools:sample/avatars" />
 
@@ -26,12 +27,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginStart="@dimen/dialog_item_left_margin"
-        android:layout_marginLeft="@dimen/dialog_item_left_margin"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_weight="1"
         android:ellipsize="end"
         android:includeFontPadding="false"
         android:maxLines="1"
+        android:textAlignment="viewStart"
         android:textAppearance="?attr/textAppearanceListItem"
         tools:ignore="SelectableText"
         tools:text="@tools:sample/first_names"
@@ -41,11 +43,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
-        android:orientation="vertical"
-        android:paddingStart="16dp"
-        android:paddingLeft="16dp"
-        android:paddingEnd="16dp"
-        android:paddingRight="16dp">
+        android:orientation="vertical">
 
         <include layout="@layout/multi_select_widget_checkbox" />
     </LinearLayout>
