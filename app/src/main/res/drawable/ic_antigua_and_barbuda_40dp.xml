@@ -14,7 +14,7 @@
       android:fillColor="#0052b4"/>
   <path
       android:pathData="M423.25,307.2H88.75C104.56,424.05 173.43,512 256,512S407.44,424.05 423.25,307.2z"
-      android:fillColor="#f0f0f0"/>
+      android:fillColor="#f3f3f3"/>
   <path
       android:pathData="M256,511.99l-256,-511.99l0,511.99z"
       android:fillColor="#a2001d"/>

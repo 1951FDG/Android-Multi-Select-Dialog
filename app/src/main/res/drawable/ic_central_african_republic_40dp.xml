@@ -17,10 +17,10 @@
       android:fillColor="#0052b4"/>
   <path
       android:pathData="M300.52,128h211.48v128h-211.48z"
-      android:fillColor="#f0f0f0"/>
+      android:fillColor="#f3f3f3"/>
   <path
       android:pathData="M0,128h211.48v128h-211.48z"
-      android:fillColor="#f0f0f0"/>
+      android:fillColor="#f3f3f3"/>
   <path
       android:pathData="M300.52,511.99l-89.04,0l0,-127.99l-211.48,0l0,127.99l0,0.01l512,0l0,-0.01l0,-127.99l-211.48,0z"
       android:fillColor="#ffda44"/>

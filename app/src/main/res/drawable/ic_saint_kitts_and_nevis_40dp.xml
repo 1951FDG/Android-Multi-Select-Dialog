@@ -17,8 +17,8 @@
       android:pathData="M62.97,511.99l449.03,-449.02l0,-62.97l-62.97,0l-0.01,0.01l-449.02,449.03l0,62.95z"/>
   <path
       android:pathData="M178.45,288.79l19.18,9.77l15.22,-15.22l-3.37,21.26l19.18,9.77l-21.26,3.37l-3.37,21.26l-9.77,-19.18l-21.25,3.37l15.21,-15.22z"
-      android:fillColor="#f0f0f0"/>
+      android:fillColor="#f3f3f3"/>
   <path
       android:pathData="M288.79,178.45l19.18,9.77l15.22,-15.21l-3.37,21.25l19.18,9.77l-21.26,3.37l-3.37,21.26l-9.77,-19.18l-21.26,3.37l15.22,-15.22z"
-      android:fillColor="#f0f0f0"/>
+      android:fillColor="#f3f3f3"/>
 </vector>

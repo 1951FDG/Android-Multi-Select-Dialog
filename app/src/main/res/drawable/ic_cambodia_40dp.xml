@@ -14,5 +14,5 @@
       android:fillColor="#0052b4"/>
   <path
       android:pathData="M320,292.29l0,-24l-16,0l0,-32l-16,-16l-16,16l0,-32l-16,-16l-16,16l0,32l-16,-16l-16,16l0,32l-16,0l0,24l-16,0l0,24l160,0l0,-24z"
-      android:fillColor="#f0f0f0"/>
+      android:fillColor="#f3f3f3"/>
 </vector>

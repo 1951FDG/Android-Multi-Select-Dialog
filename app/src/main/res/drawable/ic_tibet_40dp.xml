@@ -32,7 +32,7 @@
       android:fillColor="#ffda44"/>
   <path
       android:pathData="M490.97,489.58l-465.02,0l232.51,-217.38z"
-      android:fillColor="#f0f0f0"/>
+      android:fillColor="#f3f3f3"/>
   <path
       android:pathData="M283.21,356.51c0,15.06 -12.21,19.48 -27.27,19.48s-27.27,-4.42 -27.27,-19.48s12.21,-27.27 27.27,-27.27S283.21,341.45 283.21,356.51z"
       android:fillColor="#ffda44"/>
