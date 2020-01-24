@@ -16,16 +16,16 @@
       android:pathData="M512,512l0,0l0,-256l-256,0z"
       android:fillColor="#f3f3f3"/>
   <path
-      android:fillColor="#FF000000"
+      android:fillColor="#000000"
       android:pathData="M256,0l0,0l-256,0l0,0l256,256z"/>
   <path
-      android:fillColor="#FF000000"
+      android:fillColor="#000000"
       android:pathData="M0,256l0,256l0,0l0,0l256,-256z"/>
   <path
-      android:fillColor="#FF000000"
+      android:fillColor="#000000"
       android:pathData="M256,256l0,256l0,0l256,0l0,0z"/>
   <path
-      android:fillColor="#FF000000"
+      android:fillColor="#000000"
       android:pathData="M512,256l0,-256l0,0l0,0l-256,256z"/>
   <path
       android:pathData="M196.64,204.06l59.36,7.42l59.36,-7.42l0,-35.62l-23.74,11.87l-35.62,-35.61l-35.62,35.61l-23.74,-11.87z"
