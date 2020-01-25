@@ -8,16 +8,16 @@
       android:fillColor="#f3f3f3"/>
   <path
       android:pathData="M0,0h512v64h-512z"
-      android:fillColor="#338af3"/>
+      android:fillColor="#0052b4"/>
   <path
       android:pathData="M0,128h512v64h-512z"
-      android:fillColor="#338af3"/>
+      android:fillColor="#0052b4"/>
   <path
       android:pathData="M0,384h512v64h-512z"
-      android:fillColor="#338af3"/>
+      android:fillColor="#0052b4"/>
   <path
       android:pathData="M0,256h512v64h-512z"
-      android:fillColor="#338af3"/>
+      android:fillColor="#0052b4"/>
   <path
       android:pathData="M0,0h256v256h-256z"
       android:fillColor="#f3f3f3"/>
