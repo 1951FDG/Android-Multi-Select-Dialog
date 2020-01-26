@@ -14,12 +14,17 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.*;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.RecyclerView.RecycledViewPool;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.TreeSet;
 
 public class MultiSelectDialog extends AppCompatDialogFragment
         implements Filterable, ViewTreeObserver.OnGlobalLayoutListener, SearchView.OnQueryTextListener, View.OnClickListener,
@@ -79,6 +84,8 @@ public class MultiSelectDialog extends AppCompatDialogFragment
     // Default Values
     private String hint = "";
 
+    private int maxRecycledViews = Integer.MAX_VALUE;
+
     private int maxSelectionLimit;
 
     private String maxSelectionMessage = "";
@@ -113,7 +120,6 @@ public class MultiSelectDialog extends AppCompatDialogFragment
         if (recyclerViewMinHeight == 0) {
             if (title.isEmpty()) {
                 setStyle(DialogFragment.STYLE_NO_TITLE, R.style.FullScreenDialogStyle);
-
             } else {
                 setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
             }
@@ -145,6 +151,8 @@ public class MultiSelectDialog extends AppCompatDialogFragment
         } else {
             recyclerView.setMinimumHeight(recyclerViewMinHeight);
         }
+        RecycledViewPool recycledViewPool = recyclerView.getRecycledViewPool();
+        recycledViewPool.setMaxRecycledViews(R.layout.multi_select_item, maxRecycledViews);
         SearchView searchView = view.findViewById(R.id.search_view);
         searchView.setOnQueryTextListener(this);
         searchView.onActionViewExpanded();
@@ -279,6 +287,12 @@ public class MultiSelectDialog extends AppCompatDialogFragment
     @NonNull
     public MultiSelectDialog setHint(@NonNull String str) {
         hint = str;
+        return this;
+    }
+
+    @NonNull
+    public MultiSelectDialog setMaxRecycledViews(int max) {
+        maxRecycledViews = max;
         return this;
     }
 
