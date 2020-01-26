@@ -204,7 +204,7 @@ public class MultiSelectDialog extends AppCompatDialogFragment
 
     @NonNull
     public Collection<MultiSelectable> getMultiSelectItems() {
-        return (multiSelectItems != null) ? multiSelectItems : new ArrayList<MultiSelectable>(0);
+        return (multiSelectItems != null) ? multiSelectItems : Collections.unmodifiableCollection(new ArrayList<MultiSelectable>(0));
     }
 
     @Override
@@ -219,8 +219,12 @@ public class MultiSelectDialog extends AppCompatDialogFragment
             int size = postSelectedIds.size();
             if (size >= minSelectionLimit) {
                 if (size <= maxSelectionLimit) {
-                    // to remember last selected ids which were successfully done
-                    preSelectedIds = Collections.unmodifiableCollection(postSelectedIds);
+                    preSelectedIds = Collections.checkedSortedSet(new TreeSet<>(postSelectedIds), Integer.class);
+
+                    if (BuildConfig.DEBUG && !preSelectedIds.equals(postSelectedIds)) {
+                        throw new AssertionError("expected same:<" + postSelectedIds + "> was not:<" + preSelectedIds + ">");
+                    }
+
                     if (submitCallbackListener != null) {
                         ArrayList<Integer> selectedIds = new ArrayList<>(postSelectedIds);
                         ArrayList<String> selectedNames = getSelectNameList(getMultiSelectItems());
@@ -238,9 +242,13 @@ public class MultiSelectDialog extends AppCompatDialogFragment
             }
         }
         if (v.getId() == R.id.cancel) {
+            postSelectedIds = Collections.checkedSortedSet(new TreeSet<>(preSelectedIds), Integer.class);
+
+            if (BuildConfig.DEBUG && !postSelectedIds.equals(preSelectedIds)) {
+                throw new AssertionError("expected same:<" + preSelectedIds + "> was not:<" + postSelectedIds + ">");
+            }
+
             if (submitCallbackListener != null) {
-                postSelectedIds.clear();
-                postSelectedIds.addAll(preSelectedIds);
                 submitCallbackListener.onCancel();
             }
             dismiss();
@@ -322,7 +330,7 @@ public class MultiSelectDialog extends AppCompatDialogFragment
 
     @NonNull
     public MultiSelectDialog setMultiSelectList(@NonNull Collection<MultiSelectable> list) {
-        multiSelectItems = Collections.unmodifiableCollection(list);
+        multiSelectItems = Collections.unmodifiableCollection(new ArrayList<>(list));
         if (maxSelectionLimit == 0) {
             maxSelectionLimit = list.size();
         }
@@ -344,7 +352,7 @@ public class MultiSelectDialog extends AppCompatDialogFragment
     @NonNull
     public MultiSelectDialog setPreSelectIDsList(@NonNull Collection<Integer> list) {
         postSelectedIds = Collections.checkedSortedSet(new TreeSet<>(list), Integer.class);
-        preSelectedIds = Collections.unmodifiableCollection(postSelectedIds);
+        preSelectedIds = Collections.checkedSortedSet(new TreeSet<>(list), Integer.class);
         return this;
     }
 
