@@ -3,6 +3,7 @@ package com.abdeveloper.library;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,22 +41,6 @@ public class MultiSelectRecyclerView extends RecyclerView {
         super(context, attrs, defStyle);
     }
 
-    public void updateEmptyStatus(boolean empty) {
-        if (empty) {
-            if (emptyView != null) {
-                emptyView.setVisibility(View.VISIBLE);
-                setVisibility(View.INVISIBLE);
-            } else {
-                setVisibility(View.VISIBLE);
-            }
-        } else {
-            if (emptyView != null) {
-                emptyView.setVisibility(View.GONE);
-            }
-            setVisibility(View.VISIBLE);
-        }
-    }
-
     @Nullable
     public View getEmptyView() {
         return emptyView;
@@ -77,6 +62,22 @@ public class MultiSelectRecyclerView extends RecyclerView {
         super.setAdapter(adapter);
         if (adapter != null) {
             adapter.registerAdapterDataObserver(observer);
+        }
+    }
+
+    public void updateEmptyStatus(boolean empty) {
+        if (empty) {
+            if (emptyView != null) {
+                emptyView.setVisibility(View.VISIBLE);
+                setVisibility(View.INVISIBLE);
+            } else {
+                setVisibility(View.VISIBLE);
+            }
+        } else {
+            if (emptyView != null) {
+                emptyView.setVisibility(View.GONE);
+            }
+            setVisibility(View.VISIBLE);
         }
     }
 }

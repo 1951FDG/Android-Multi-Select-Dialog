@@ -9,17 +9,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.abdeveloper.library.MultiSelectModel;
-import com.abdeveloper.library.MultiSelectDialog;
-import com.abdeveloper.library.MultiSelectDialog.SubmitCallbackListener;
-import com.abdeveloper.library.MultiSelectable;
-
-import java.util.ArrayList;
-
 import androidx.annotation.ArrayRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.abdeveloper.library.MultiSelectDialog;
+import com.abdeveloper.library.MultiSelectDialog.SubmitCallbackListener;
+import com.abdeveloper.library.MultiSelectModel;
+import com.abdeveloper.library.MultiSelectable;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, SubmitCallbackListener {
 
@@ -56,13 +56,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onClick(@NonNull View v) {
-        multiSelectDialog.show(getSupportFragmentManager(), "multiSelectDialog");
+    public void onCancel() {
+        Log.d(TAG, "Dialog cancelled");
     }
 
     @Override
-    public void onCancel() {
-        Log.d(TAG, "Dialog cancelled");
+    public void onClick(@NonNull View v) {
+        multiSelectDialog.show(getSupportFragmentManager(), "multiSelectDialog");
     }
 
     @Override
