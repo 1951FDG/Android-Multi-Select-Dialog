@@ -1,14 +1,17 @@
 package com.abdeveloper.library;
 
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Spannable;
-import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.View;
-import android.widget.Checkable;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -24,27 +27,32 @@ class MultiSelectViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         boolean removeFromSelection(@NonNull Integer id);
     }
 
-    private final int color;
-
-    private final Checkable dialog_item_checkbox;
+    private final AppCompatCheckBox dialog_item_checkbox;
 
     private final ImageView dialog_item_icon;
 
     private final TextView dialog_item_name;
 
-    private SelectionCallbackListener itemViewClickListener;
+    private final SelectionCallbackListener itemViewClickListener;
 
-    MultiSelectViewHolder(View view, ImageView v1, TextView v2, Checkable v3, int id) {
-        super(view);
-        dialog_item_icon = v1;
-        dialog_item_name = v2;
-        dialog_item_checkbox = v3;
+    private final StyleSpan what = new StyleSpan(Typeface.BOLD);
+
+    MultiSelectViewHolder(@NonNull View itemView, SelectionCallbackListener listener) {
+        super(itemView);
+        itemViewClickListener = listener;
+        dialog_item_checkbox = itemView.findViewById(R.id.dialog_item_checkbox);
+        dialog_item_icon = itemView.findViewById(R.id.dialog_item_icon);
+        dialog_item_name = itemView.findViewById(R.id.dialog_item_name);
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            dialog_item_checkbox.setSupportButtonTintList(
+                    AppCompatResources.getColorStateList(dialog_item_checkbox.getContext(), R.color.control_checkable_material));
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             dialog_item_icon.setClipToOutline(true);
         }
-        color = id;
         Spannable.Factory spannableFactory = MultiSelectFactory.getInstance();
         dialog_item_name.setSpannableFactory(spannableFactory);
+        itemView.setOnClickListener(this);
     }
 
     @Override
@@ -62,7 +70,7 @@ class MultiSelectViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         dialog_item_checkbox.setChecked(!checked);
     }
 
-    void bind(MultiSelectable model, SelectionCallbackListener listener) {
+    void bind(MultiSelectable model) {
         int resId = 0;
         if (model instanceof Iconifiable) {
             resId = ((Iconifiable) model).getResId();
@@ -79,37 +87,32 @@ class MultiSelectViewHolder extends RecyclerView.ViewHolder implements View.OnCl
             dialog_item_name.setText(name, TextView.BufferType.SPANNABLE);
             if (model instanceof Range) {
                 CharSequence text = dialog_item_name.getText();
-                ForegroundColorSpan span = new ForegroundColorSpan(color);
                 int start = ((Range) model).getStart();
                 int end = ((Range) model).getEnd();
-                ((Spannable) text).setSpan(span, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                ((Spannable) text).setSpan(what, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         } else {
             dialog_item_name.setText(name, TextView.BufferType.NORMAL);
         }
+        SelectionCallbackListener listener = itemViewClickListener;
         if (listener != null) {
             int id = model.getId();
             boolean checked = listener.isSelected(id);
             dialog_item_checkbox.setChecked(checked);
         }
-        itemViewClickListener = listener;
-        if (!itemView.hasOnClickListeners()) {
-            itemView.setOnClickListener(this);
-        }
     }
 
-    void bind(MultiSelectable model, SelectionCallbackListener listener, List<Object> payloads) {
+    void bind(MultiSelectable model, List<Object> payloads) {
         Bundle bundle = (Bundle) payloads.get(0);
         int[] array = bundle.getIntArray(MultiSelectItemCallback.SPAN);
         if ((array != null) && (array.length != 0)) {
             CharSequence text = dialog_item_name.getText();
             if (text instanceof Spannable) {
-                ForegroundColorSpan[] spans = ((Spannable) text).getSpans(0, text.length(), ForegroundColorSpan.class);
+                StyleSpan[] spans = ((Spannable) text).getSpans(0, text.length(), StyleSpan.class);
                 if (spans.length > 0) {
                     ((Spannable) text).setSpan(spans[0], array[0], array[1], Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
             }
         }
     }
-
 }
