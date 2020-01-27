@@ -4,6 +4,7 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Spannable;
+import android.text.Spannable.Factory;
 import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.Checkable;
@@ -15,11 +16,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.widget.CompoundButtonCompat;
 import androidx.core.widget.ImageViewCompat;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import java.util.List;
 
-class MultiSelectViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+class MultiSelectViewHolder extends ViewHolder implements View.OnClickListener {
 
     public interface SelectionCallbackListener {
 
@@ -30,13 +31,15 @@ class MultiSelectViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         boolean removeFromSelection(@NonNull Integer id);
     }
 
+    private static final StyleSpan BOLD_STYLE_SPAN = new StyleSpan(Typeface.BOLD);
+
+    private static final Factory SPANNABLE_FACTORY = new MultiSelectFactory();
+
     private final ImageView imageView;
 
     private final SelectionCallbackListener listener;
 
     private final TextView titleView;
-
-    private final StyleSpan what = new StyleSpan(Typeface.BOLD);
 
     MultiSelectViewHolder(@NonNull View v, SelectionCallbackListener l) {
         super(v);
@@ -57,13 +60,14 @@ class MultiSelectViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             imageView.setClipToOutline(true);
         }
-        Spannable.Factory spannableFactory = MultiSelectFactory.getInstance();
-        titleView.setSpannableFactory(spannableFactory);
+        titleView.setSpannableFactory(SPANNABLE_FACTORY);
+        //noinspection ThisEscapedInObjectConstruction
         v.setOnClickListener(this);
     }
 
     @Override
     public void onClick(@NonNull View v) {
+        //noinspection NumericCastThatLosesPrecision
         int id = (int) getItemId();
         boolean checked = ((Checkable) v).isChecked();
         if (listener != null) {
@@ -78,8 +82,8 @@ class MultiSelectViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
     void bind(MultiSelectable model) {
         int resId = 0;
-        if (model instanceof Iconifiable) {
-            resId = ((Iconifiable) model).getResId();
+        if (model instanceof Iconable) {
+            resId = ((Iconable) model).getResId();
         }
         if (resId == 0) {
             if (imageView.getVisibility() != View.GONE) {
@@ -95,7 +99,8 @@ class MultiSelectViewHolder extends RecyclerView.ViewHolder implements View.OnCl
                 CharSequence text = titleView.getText();
                 int start = ((Range) model).getStart();
                 int end = ((Range) model).getEnd();
-                ((Spannable) text).setSpan(what, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                //noinspection StaticFieldReferencedViaSubclass
+                ((Spannable) text).setSpan(BOLD_STYLE_SPAN, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         } else {
             titleView.setText(name, TextView.BufferType.NORMAL);
@@ -109,12 +114,14 @@ class MultiSelectViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
     void bind(MultiSelectable model, List<Object> payloads) {
         Bundle bundle = (Bundle) payloads.get(0);
-        int[] array = bundle.getIntArray(MultiSelectItemCallback.SPAN);
+        int[] array = bundle.getIntArray(MultiSelectItemCallback.INT_ARRAY);
         if ((array != null) && (array.length != 0)) {
             CharSequence text = titleView.getText();
             if (text instanceof Spannable) {
+                //noinspection OverlyStrongTypeCast
                 StyleSpan[] spans = ((Spannable) text).getSpans(0, text.length(), StyleSpan.class);
                 if (spans.length > 0) {
+                    //noinspection StaticFieldReferencedViaSubclass
                     ((Spannable) text).setSpan(spans[0], array[0], array[1], Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
             }

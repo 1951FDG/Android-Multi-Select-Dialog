@@ -45,6 +45,7 @@ class MultiSelectAdapter extends ListAdapter<MultiSelectable, MultiSelectViewHol
     @Override
     public long getItemId(int position) {
         MultiSelectable model = getItem(position);
+        //noinspection ImplicitNumericConversion
         return model.getId();
     }
 

@@ -63,14 +63,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(@NonNull View v) {
-        multiSelectDialog.show(getSupportFragmentManager(), "multiSelectDialog");
+        multiSelectDialog.show(getSupportFragmentManager(), null);
     }
 
     @Override
     public void onSelected(@NonNull ArrayList<Integer> selectedIds, @NonNull ArrayList<String> selectedNames, @NonNull String dataString) {
-        Toast.makeText(this,
-                "Selected Ids : " + selectedIds + '\n' + "Selected Names : " + selectedNames + '\n' + "DataString : " + dataString,
-                Toast.LENGTH_LONG).show();
+        Toast toast = Toast.makeText(this,
+                String.format("Selected Ids : %s\nSelected Names : %s\nDataString : %s", selectedIds, selectedNames, dataString),
+                Toast.LENGTH_LONG);
+        toast.show();
     }
 
     private ArrayList<MultiSelectable> getMultiSelectModels(CharSequence[] countries, @ArrayRes int id) {
@@ -80,8 +81,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ArrayList<MultiSelectable> listOfCountries = new ArrayList<>(length);
         for (int index = 0; index < length; index++) {
             int resid = icons.getResourceId(index, 0);
-            SpannableString string = new SpannableString(countries[index]);
-            listOfCountries.add(new MultiSelectModel(index, string, resid));
+            SpannableString spannableString = new SpannableString(countries[index]);
+            listOfCountries.add(new MultiSelectModel(index, spannableString, resid));
         }
         icons.recycle();
         return listOfCountries;

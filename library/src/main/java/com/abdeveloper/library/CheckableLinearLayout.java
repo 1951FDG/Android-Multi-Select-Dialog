@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.widget.Checkable;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
@@ -15,20 +16,20 @@ public class CheckableLinearLayout extends LinearLayout implements Checkable {
 
     private boolean mChecked;
 
-    public CheckableLinearLayout(Context context) {
+    public CheckableLinearLayout(@NonNull Context context) {
         super(context);
     }
 
-    public CheckableLinearLayout(Context context, @Nullable AttributeSet attrs) {
+    public CheckableLinearLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public CheckableLinearLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public CheckableLinearLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @RequiresApi(api = VERSION_CODES.LOLLIPOP)
-    public CheckableLinearLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public CheckableLinearLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
@@ -50,6 +51,7 @@ public class CheckableLinearLayout extends LinearLayout implements Checkable {
         setChecked(!mChecked);
     }
 
+    @NonNull
     @Override
     protected int[] onCreateDrawableState(int extraSpace) {
         final int[] drawableState = super.onCreateDrawableState(extraSpace + 1);

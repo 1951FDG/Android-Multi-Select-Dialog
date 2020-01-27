@@ -12,6 +12,7 @@ public class MultiSelectRecyclerView extends RecyclerView {
 
     private View emptyView;
 
+    @SuppressWarnings("ConstantConditions")
     private final AdapterDataObserver observer = new AdapterDataObserver() {
         @Override
         public void onChanged() {

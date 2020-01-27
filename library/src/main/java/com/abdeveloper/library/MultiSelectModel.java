@@ -7,17 +7,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 @SuppressWarnings({ "ParameterHidesMemberVariable", "TransientFieldInNonSerializableClass" })
-public class MultiSelectModel implements MultiSelectable, Iconifiable, Range {
-
-    private transient int end;
+public class MultiSelectModel implements MultiSelectable, Iconable, Range {
 
     private final int id;
 
-    private CharSequence name;
-
     private final transient int resId;
 
+    private transient int end;
+
     private transient int start;
+
+    private CharSequence name;
 
     public MultiSelectModel(int id, @NonNull CharSequence name) {
         this(id, name, 0);
@@ -35,6 +35,7 @@ public class MultiSelectModel implements MultiSelectable, Iconifiable, Range {
         resId = 0;
     }
 
+    @SuppressWarnings("FinalMethod")
     @Nullable
     @Override
     public final MultiSelectModel clone() {
@@ -45,8 +46,7 @@ public class MultiSelectModel implements MultiSelectable, Iconifiable, Range {
                 clone.setName(new SpannableString(name));
             }
             return clone;
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
+        } catch (CloneNotSupportedException ignored) {
         }
         return null;
     }

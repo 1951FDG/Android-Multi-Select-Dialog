@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.TreeSet;
 
+@SuppressWarnings("ReturnOfThis")
 public class MultiSelectDialog extends AppCompatDialogFragment
         implements Filterable, ViewTreeObserver.OnGlobalLayoutListener, SearchView.OnQueryTextListener, View.OnClickListener,
         MultiSelectViewHolder.SelectionCallbackListener {
@@ -65,6 +66,7 @@ public class MultiSelectDialog extends AppCompatDialogFragment
             return results;
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             MultiSelectAdapter adapter = getAdapter();
@@ -222,7 +224,8 @@ public class MultiSelectDialog extends AppCompatDialogFragment
                     preSelectedIds = Collections.checkedSortedSet(new TreeSet<>(postSelectedIds), Integer.class);
 
                     if (BuildConfig.DEBUG && !preSelectedIds.equals(postSelectedIds)) {
-                        throw new AssertionError("expected same:<" + postSelectedIds + "> was not:<" + preSelectedIds + ">");
+                        //noinspection DuplicateStringLiteralInspection
+                        throw new AssertionError(String.format("expected same:<%s> was not:<%s>", postSelectedIds, preSelectedIds));
                     }
 
                     if (submitCallbackListener != null) {
@@ -245,7 +248,8 @@ public class MultiSelectDialog extends AppCompatDialogFragment
             postSelectedIds = Collections.checkedSortedSet(new TreeSet<>(preSelectedIds), Integer.class);
 
             if (BuildConfig.DEBUG && !postSelectedIds.equals(preSelectedIds)) {
-                throw new AssertionError("expected same:<" + preSelectedIds + "> was not:<" + postSelectedIds + ">");
+                //noinspection DuplicateStringLiteralInspection
+                throw new AssertionError(String.format("expected same:<%s> was not:<%s>", preSelectedIds, postSelectedIds));
             }
 
             if (submitCallbackListener != null) {
@@ -255,6 +259,7 @@ public class MultiSelectDialog extends AppCompatDialogFragment
         }
     }
 
+    @SuppressWarnings("ProhibitedExceptionThrown")
     @Override
     public void onGlobalLayout() {
         Dialog dialog = getDialog();
@@ -382,7 +387,7 @@ public class MultiSelectDialog extends AppCompatDialogFragment
     }
 
     private String getSelectedDataString(Collection<MultiSelectable> list) {
-        StringBuilder data = new StringBuilder();
+        StringBuilder data = new StringBuilder(256);
         for (MultiSelectable model : list) {
             int id = model.getId();
             if (postSelectedIds.contains(id)) {
@@ -400,11 +405,8 @@ public class MultiSelectDialog extends AppCompatDialogFragment
         String option = resources.getString(R.string.option);
         String message = selectionMessage;
         if (message.isEmpty()) {
-            if (selectionLimit > 1) {
-                message = s + ' ' + selectionLimit + ' ' + options;
-            } else {
-                message = s + ' ' + selectionLimit + ' ' + option;
-            }
+            //noinspection HardCodedStringLiteral
+            message = String.format("%s %d %s", s, selectionLimit, (selectionLimit > 1) ? options : option);
         }
         Toast toast = Toast.makeText(getActivity(), message, Toast.LENGTH_LONG);
         toast.show();
