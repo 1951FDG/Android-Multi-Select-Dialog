@@ -12,11 +12,11 @@ import java.util.List;
 
 class MultiSelectAdapter extends ListAdapter<MultiSelectable, MultiSelectViewHolder> {
 
-    private final MultiSelectViewHolder.SelectionCallbackListener mListener;
+    private final MultiSelectViewHolder.SelectionCallbackListener listener;
 
-    MultiSelectAdapter(MultiSelectViewHolder.SelectionCallbackListener listener) {
+    MultiSelectAdapter(MultiSelectViewHolder.SelectionCallbackListener l) {
         super(new MultiSelectItemCallback());
-        mListener = listener;
+        listener = l;
     }
 
     @NonNull
@@ -25,7 +25,7 @@ class MultiSelectAdapter extends ListAdapter<MultiSelectable, MultiSelectViewHol
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View root = inflater.inflate(viewType, parent, false);
-        return new MultiSelectViewHolder(root, mListener);
+        return new MultiSelectViewHolder(root, listener);
     }
 
     @Override

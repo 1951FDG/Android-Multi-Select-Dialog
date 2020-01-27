@@ -6,12 +6,15 @@ import android.os.Bundle;
 import android.text.Spannable;
 import android.text.style.StyleSpan;
 import android.view.View;
+import android.widget.Checkable;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
-import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.core.widget.CompoundButtonCompat;
+import androidx.core.widget.ImageViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -27,39 +30,42 @@ class MultiSelectViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         boolean removeFromSelection(@NonNull Integer id);
     }
 
-    private final AppCompatCheckBox dialog_item_checkbox;
+    private final ImageView imageView;
 
-    private final ImageView dialog_item_icon;
+    private final SelectionCallbackListener listener;
 
-    private final TextView dialog_item_name;
-
-    private final SelectionCallbackListener itemViewClickListener;
+    private final TextView titleView;
 
     private final StyleSpan what = new StyleSpan(Typeface.BOLD);
 
-    MultiSelectViewHolder(@NonNull View itemView, SelectionCallbackListener listener) {
-        super(itemView);
-        itemViewClickListener = listener;
-        dialog_item_checkbox = itemView.findViewById(R.id.dialog_item_checkbox);
-        dialog_item_icon = itemView.findViewById(R.id.dialog_item_icon);
-        dialog_item_name = itemView.findViewById(R.id.dialog_item_name);
+    MultiSelectViewHolder(@NonNull View v, SelectionCallbackListener l) {
+        super(v);
+        listener = l;
+        View checkboxView = v.findViewById(R.id.dialog_item_checkbox);
+        imageView = v.findViewById(R.id.dialog_item_icon);
+        titleView = v.findViewById(R.id.dialog_item_name);
+        if (checkboxView instanceof ImageView) {
+            ImageViewCompat.setImageTintList(((ImageView) checkboxView),
+                    AppCompatResources.getColorStateList(checkboxView.getContext(), R.color.control_checkable_material));
+        }
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            dialog_item_checkbox.setSupportButtonTintList(
-                    AppCompatResources.getColorStateList(dialog_item_checkbox.getContext(), R.color.control_checkable_material));
+            if (checkboxView instanceof CompoundButton) {
+                CompoundButtonCompat.setButtonTintList(((CompoundButton) checkboxView),
+                        AppCompatResources.getColorStateList(checkboxView.getContext(), R.color.control_checkable_material));
+            }
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            dialog_item_icon.setClipToOutline(true);
+            imageView.setClipToOutline(true);
         }
         Spannable.Factory spannableFactory = MultiSelectFactory.getInstance();
-        dialog_item_name.setSpannableFactory(spannableFactory);
-        itemView.setOnClickListener(this);
+        titleView.setSpannableFactory(spannableFactory);
+        v.setOnClickListener(this);
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(@NonNull View v) {
         int id = (int) getItemId();
-        SelectionCallbackListener listener = itemViewClickListener;
-        boolean checked = ((CheckableLinearLayout) v).isChecked();
+        boolean checked = ((Checkable) v).isChecked();
         if (listener != null) {
             if (checked) {
                 listener.removeFromSelection(id);
@@ -67,7 +73,7 @@ class MultiSelectViewHolder extends RecyclerView.ViewHolder implements View.OnCl
                 listener.addToSelection(id);
             }
         }
-        ((CheckableLinearLayout) v).setChecked(!checked);
+        ((Checkable) v).setChecked(!checked);
     }
 
     void bind(MultiSelectable model) {
@@ -76,29 +82,28 @@ class MultiSelectViewHolder extends RecyclerView.ViewHolder implements View.OnCl
             resId = ((Iconifiable) model).getResId();
         }
         if (resId == 0) {
-            if (dialog_item_icon.getVisibility() != View.GONE) {
-                dialog_item_icon.setVisibility(View.GONE);
+            if (imageView.getVisibility() != View.GONE) {
+                imageView.setVisibility(View.GONE);
             }
         } else {
-            dialog_item_icon.setImageResource(resId);
+            imageView.setImageResource(resId);
         }
         CharSequence name = model.getName();
         if (name instanceof Spannable) {
-            dialog_item_name.setText(name, TextView.BufferType.SPANNABLE);
+            titleView.setText(name, TextView.BufferType.SPANNABLE);
             if (model instanceof Range) {
-                CharSequence text = dialog_item_name.getText();
+                CharSequence text = titleView.getText();
                 int start = ((Range) model).getStart();
                 int end = ((Range) model).getEnd();
                 ((Spannable) text).setSpan(what, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         } else {
-            dialog_item_name.setText(name, TextView.BufferType.NORMAL);
+            titleView.setText(name, TextView.BufferType.NORMAL);
         }
-        SelectionCallbackListener listener = itemViewClickListener;
         if (listener != null) {
             int id = model.getId();
             boolean checked = listener.isSelected(id);
-            ((CheckableLinearLayout) itemView).setChecked(checked);
+            ((Checkable) itemView).setChecked(checked);
         }
     }
 
@@ -106,7 +111,7 @@ class MultiSelectViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         Bundle bundle = (Bundle) payloads.get(0);
         int[] array = bundle.getIntArray(MultiSelectItemCallback.SPAN);
         if ((array != null) && (array.length != 0)) {
-            CharSequence text = dialog_item_name.getText();
+            CharSequence text = titleView.getText();
             if (text instanceof Spannable) {
                 StyleSpan[] spans = ((Spannable) text).getSpans(0, text.length(), StyleSpan.class);
                 if (spans.length > 0) {

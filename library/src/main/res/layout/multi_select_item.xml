@@ -45,5 +45,5 @@
         tools:text="@tools:sample/first_names"
         tools:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
-    <include layout="@layout/multi_select_widget_checkbox" />
+    <include layout="@layout/multi_select_widget_imageview" />
 </com.abdeveloper.library.CheckableLinearLayout>
