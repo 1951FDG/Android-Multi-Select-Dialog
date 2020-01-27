@@ -8,4 +8,5 @@
     android:button="@drawable/btn_check_material"
     android:buttonTint="@color/control_checkable_material"
     android:clickable="false"
+    android:duplicateParentState="true"
     android:focusable="false" />

@@ -7,4 +7,5 @@
     android:background="@null"
     android:button="@drawable/btn_check_material"
     android:clickable="false"
+    android:duplicateParentState="true"
     android:focusable="false" />

@@ -59,7 +59,7 @@ class MultiSelectViewHolder extends RecyclerView.ViewHolder implements View.OnCl
     public void onClick(View v) {
         int id = (int) getItemId();
         SelectionCallbackListener listener = itemViewClickListener;
-        boolean checked = dialog_item_checkbox.isChecked();
+        boolean checked = ((CheckableLinearLayout) v).isChecked();
         if (listener != null) {
             if (checked) {
                 listener.removeFromSelection(id);
@@ -67,7 +67,7 @@ class MultiSelectViewHolder extends RecyclerView.ViewHolder implements View.OnCl
                 listener.addToSelection(id);
             }
         }
-        dialog_item_checkbox.setChecked(!checked);
+        ((CheckableLinearLayout) v).setChecked(!checked);
     }
 
     void bind(MultiSelectable model) {
@@ -98,7 +98,7 @@ class MultiSelectViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         if (listener != null) {
             int id = model.getId();
             boolean checked = listener.isSelected(id);
-            dialog_item_checkbox.setChecked(checked);
+            ((CheckableLinearLayout) itemView).setChecked(checked);
         }
     }
 

@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+    When a user selects an item, the ViewHolder will set the state for that item's root view
+    (this CheckableLinearLayout) to "checked". Note that this requires that the root view
+    implements the Checkable interface. Once the root view is checked, any children that
+    have the duplicateParentState attribute set will inherit this "checked" state.
+-->
+<com.abdeveloper.library.CheckableLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="?attr/listPreferredItemHeight"
@@ -42,9 +48,10 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:duplicateParentState="true"
         android:gravity="center_vertical"
         android:orientation="vertical">
 
         <include layout="@layout/multi_select_widget_checkbox" />
     </LinearLayout>
-</LinearLayout>
+</com.abdeveloper.library.CheckableLinearLayout>

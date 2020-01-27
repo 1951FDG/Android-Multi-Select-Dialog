@@ -7,5 +7,6 @@
     android:layout_gravity="center_vertical"
     android:background="@null"
     android:clickable="false"
+    android:duplicateParentState="true"
     android:focusable="false"
     app:buttonCompat="@drawable/btn_check_material" />
