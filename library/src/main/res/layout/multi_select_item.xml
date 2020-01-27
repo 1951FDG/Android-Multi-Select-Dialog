@@ -45,13 +45,5 @@
         tools:text="@tools:sample/first_names"
         tools:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:duplicateParentState="true"
-        android:gravity="center_vertical"
-        android:orientation="vertical">
-
-        <include layout="@layout/multi_select_widget_checkbox" />
-    </LinearLayout>
+    <include layout="@layout/multi_select_widget_checkbox" />
 </com.abdeveloper.library.CheckableLinearLayout>
