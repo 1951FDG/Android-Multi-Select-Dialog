@@ -6,12 +6,10 @@
 
     <Button
         android:id="@+id/show_dialog"
-        android:layout_width="match_parent"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="8dp"
-        android:text="@string/show_multi_select_dialog"
-        android:textColor="@android:color/white" />
+        android:text="@string/show_multi_select_dialog" />
 
 </RelativeLayout>

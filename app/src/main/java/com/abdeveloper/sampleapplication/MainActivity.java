@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .setPreSelectIDsList(selectedCountries) //List of ids that you need to be selected
                 .setMultiSelectList(listOfCountries) // the multi select model list with ids and name
                 .setSubmitListener(this);
+        button.performClick();
     }
 
     @Override
@@ -67,12 +68,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onSelected(@NonNull ArrayList<Integer> selectedIds, @NonNull ArrayList<String> selectedNames, @NonNull String dataString) {
-        int size = selectedNames.size();
-        for (int i = 0; i < size; i++) {
-            Toast.makeText(this,
-                    "Selected Ids : " + selectedIds.get(i) + '\n' + "Selected Names : " + selectedNames.get(i) + '\n' + "DataString : "
-                            + dataString, Toast.LENGTH_SHORT).show();
-        }
+        Toast.makeText(this,
+                "Selected Ids : " + selectedIds + '\n' + "Selected Names : " + selectedNames + '\n' + "DataString : " + dataString,
+                Toast.LENGTH_LONG).show();
     }
 
     private ArrayList<MultiSelectable> getMultiSelectModels(CharSequence[] countries, @ArrayRes int id) {
