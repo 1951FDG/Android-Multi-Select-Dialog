@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.Window;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.SearchView;
@@ -175,6 +174,15 @@ public class MultiSelectDialog extends AppCompatDialogFragment
     }
 
     @Override
+    public void onStart() {
+        postSelectedIds = Collections.checkedSortedSet(new TreeSet<>(preSelectedIds), Integer.class);
+        if (BuildConfig.DEBUG && !postSelectedIds.equals(preSelectedIds)) {
+            throw new AssertionError(String.format("expected same:<%s> was not:<%s>", preSelectedIds, postSelectedIds));
+        }
+        super.onStart();
+    }
+
+    @Override
     public boolean addToSelection(@NonNull Integer id) {
         return postSelectedIds.add(id);
     }
@@ -222,12 +230,6 @@ public class MultiSelectDialog extends AppCompatDialogFragment
             if (size >= minSelectionLimit) {
                 if (size <= maxSelectionLimit) {
                     preSelectedIds = Collections.checkedSortedSet(new TreeSet<>(postSelectedIds), Integer.class);
-
-                    if (BuildConfig.DEBUG && !preSelectedIds.equals(postSelectedIds)) {
-                        //noinspection DuplicateStringLiteralInspection
-                        throw new AssertionError(String.format("expected same:<%s> was not:<%s>", postSelectedIds, preSelectedIds));
-                    }
-
                     if (submitCallbackListener != null) {
                         ArrayList<Integer> selectedIds = new ArrayList<>(postSelectedIds);
                         ArrayList<String> selectedNames = getSelectNameList(getMultiSelectItems());
@@ -245,13 +247,6 @@ public class MultiSelectDialog extends AppCompatDialogFragment
             }
         }
         if (v.getId() == R.id.cancel) {
-            postSelectedIds = Collections.checkedSortedSet(new TreeSet<>(preSelectedIds), Integer.class);
-
-            if (BuildConfig.DEBUG && !postSelectedIds.equals(preSelectedIds)) {
-                //noinspection DuplicateStringLiteralInspection
-                throw new AssertionError(String.format("expected same:<%s> was not:<%s>", preSelectedIds, postSelectedIds));
-            }
-
             if (submitCallbackListener != null) {
                 submitCallbackListener.onCancel();
             }
@@ -259,21 +254,16 @@ public class MultiSelectDialog extends AppCompatDialogFragment
         }
     }
 
-    @SuppressWarnings("ProhibitedExceptionThrown")
     @Override
     public void onGlobalLayout() {
         Dialog dialog = getDialog();
-        Window window = dialog.getWindow();
-        if (window == null) {
-            throw new NullPointerException();
+        View view = dialog.findViewById(R.id.recycler_view);
+        if (view == null) {
+            throw new IllegalArgumentException("ID does not reference a View inside this Dialog");
         }
-        MultiSelectRecyclerView recyclerView = window.findViewById(R.id.recycler_view);
-        if (recyclerView == null) {
-            throw new NullPointerException();
-        }
-        recyclerViewMinHeight = recyclerView.getHeight();
-        recyclerView.setMinimumHeight(recyclerViewMinHeight);
-        ViewTreeObserver observer = recyclerView.getViewTreeObserver();
+        recyclerViewMinHeight = view.getHeight();
+        view.setMinimumHeight(recyclerViewMinHeight);
+        ViewTreeObserver observer = view.getViewTreeObserver();
         observer.removeOnGlobalLayoutListener(this);
     }
 
@@ -356,7 +346,6 @@ public class MultiSelectDialog extends AppCompatDialogFragment
 
     @NonNull
     public MultiSelectDialog setPreSelectIDsList(@NonNull Collection<Integer> list) {
-        postSelectedIds = Collections.checkedSortedSet(new TreeSet<>(list), Integer.class);
         preSelectedIds = Collections.checkedSortedSet(new TreeSet<>(list), Integer.class);
         return this;
     }
