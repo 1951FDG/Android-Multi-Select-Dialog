@@ -22,15 +22,6 @@ import java.util.List;
 
 class MultiSelectViewHolder extends ViewHolder implements View.OnClickListener {
 
-    public interface SelectionCallbackListener {
-
-        boolean addToSelection(@NonNull Integer id);
-
-        boolean isSelected(@NonNull Integer id);
-
-        boolean removeFromSelection(@NonNull Integer id);
-    }
-
     private static final StyleSpan BOLD_STYLE_SPAN = new StyleSpan(Typeface.BOLD);
 
     private static final Factory SPANNABLE_FACTORY = new MultiSelectFactory();
@@ -126,5 +117,14 @@ class MultiSelectViewHolder extends ViewHolder implements View.OnClickListener {
                 }
             }
         }
+    }
+
+    public interface SelectionCallbackListener {
+
+        boolean addToSelection(@NonNull Integer id);
+
+        boolean isSelected(@NonNull Integer id);
+
+        boolean removeFromSelection(@NonNull Integer id);
     }
 }

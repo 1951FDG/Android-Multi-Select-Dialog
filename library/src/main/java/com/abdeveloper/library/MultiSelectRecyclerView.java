@@ -10,8 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class MultiSelectRecyclerView extends RecyclerView {
 
-    private View emptyView;
-
     @SuppressWarnings("ConstantConditions")
     private final AdapterDataObserver observer = new AdapterDataObserver() {
         @Override
@@ -30,6 +28,8 @@ public class MultiSelectRecyclerView extends RecyclerView {
         }
     };
 
+    private View emptyView;
+
     public MultiSelectRecyclerView(@NonNull Context context) {
         super(context);
     }
@@ -42,18 +42,6 @@ public class MultiSelectRecyclerView extends RecyclerView {
         super(context, attrs, defStyle);
     }
 
-    @Nullable
-    public View getEmptyView() {
-        return emptyView;
-    }
-
-    public void setEmptyView(@Nullable View view) {
-        emptyView = view;
-        Adapter adapter = getAdapter();
-        boolean empty = (adapter == null) || (adapter.getItemCount() == 0);
-        updateEmptyStatus(empty);
-    }
-
     @Override
     public void setAdapter(@Nullable Adapter adapter) {
         Adapter oldAdapter = getAdapter();
@@ -64,6 +52,18 @@ public class MultiSelectRecyclerView extends RecyclerView {
         if (adapter != null) {
             adapter.registerAdapterDataObserver(observer);
         }
+    }
+
+    @Nullable
+    public View getEmptyView() {
+        return emptyView;
+    }
+
+    public void setEmptyView(@Nullable View view) {
+        emptyView = view;
+        Adapter adapter = getAdapter();
+        boolean empty = (adapter == null) || (adapter.getItemCount() == 0);
+        updateEmptyStatus(empty);
     }
 
     public void updateEmptyStatus(boolean empty) {

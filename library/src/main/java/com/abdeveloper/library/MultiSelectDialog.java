@@ -30,58 +30,6 @@ public class MultiSelectDialog extends AppCompatDialogFragment
         implements Filterable, ViewTreeObserver.OnGlobalLayoutListener, SearchView.OnQueryTextListener, View.OnClickListener,
         MultiSelectViewHolder.SelectionCallbackListener {
 
-    protected class MultiSelectFilter extends Filter {
-
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            List<MultiSelectable> list;
-            int queryLength = constraint.length();
-            if (queryLength > 0) {
-                Collection<MultiSelectable> collection = getMultiSelectItems();
-                list = new ArrayList<>(collection.size());
-                for (MultiSelectable model : collection) {
-                    CharSequence name = model.getName();
-                    String text = name.toString();
-                    String lowerCaseText = text.toLowerCase();
-                    int queryStart = lowerCaseText.indexOf(constraint.toString());
-                    int queryEnd = queryStart + queryLength;
-                    if (queryStart > -1) {
-                        MultiSelectable clone = model.clone();
-                        if (queryLength > 1) {
-                            if (clone instanceof Range) {
-                                ((Range) clone).setStart(queryStart);
-                                ((Range) clone).setEnd(queryEnd);
-                            }
-                        }
-                        list.add(clone);
-                    }
-                }
-            } else {
-                list = getList();
-            }
-            FilterResults results = new FilterResults();
-            results.count = list.size();
-            results.values = list;
-            return results;
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            MultiSelectAdapter adapter = getAdapter();
-            if (adapter != null) {
-                adapter.submitList((List<MultiSelectable>) results.values);
-            }
-        }
-    }
-
-    public interface SubmitCallbackListener {
-
-        void onCancel();
-
-        void onSelected(@NonNull ArrayList<Integer> selectedIds, @NonNull ArrayList<String> selectedNames, @NonNull String dataString);
-    }
-
     // Default Values
     private String hint = "";
 
@@ -187,11 +135,6 @@ public class MultiSelectDialog extends AppCompatDialogFragment
         return postSelectedIds.add(id);
     }
 
-    @Nullable
-    public MultiSelectAdapter getAdapter() {
-        return multiSelectAdapter;
-    }
-
     @NonNull
     @Override
     public Filter getFilter() {
@@ -199,22 +142,6 @@ public class MultiSelectDialog extends AppCompatDialogFragment
             multiSelectFilter = new MultiSelectFilter();
         }
         return multiSelectFilter;
-    }
-
-    @NonNull
-    public List<MultiSelectable> getList() {
-        Collection<MultiSelectable> collection = getMultiSelectItems();
-        List<MultiSelectable> list = new ArrayList<>(collection.size());
-        for (MultiSelectable model : collection) {
-            MultiSelectable clone = model.clone();
-            list.add(clone);
-        }
-        return list;
-    }
-
-    @NonNull
-    public Collection<MultiSelectable> getMultiSelectItems() {
-        return (multiSelectItems != null) ? multiSelectItems : Collections.unmodifiableCollection(new ArrayList<MultiSelectable>(0));
     }
 
     @Override
@@ -285,6 +212,27 @@ public class MultiSelectDialog extends AppCompatDialogFragment
     @Override
     public boolean removeFromSelection(@NonNull Integer id) {
         return postSelectedIds.remove(id);
+    }
+
+    @Nullable
+    public MultiSelectAdapter getAdapter() {
+        return multiSelectAdapter;
+    }
+
+    @NonNull
+    public List<MultiSelectable> getList() {
+        Collection<MultiSelectable> collection = getMultiSelectItems();
+        List<MultiSelectable> list = new ArrayList<>(collection.size());
+        for (MultiSelectable model : collection) {
+            MultiSelectable clone = model.clone();
+            list.add(clone);
+        }
+        return list;
+    }
+
+    @NonNull
+    public Collection<MultiSelectable> getMultiSelectItems() {
+        return (multiSelectItems != null) ? multiSelectItems : Collections.unmodifiableCollection(new ArrayList<MultiSelectable>(0));
     }
 
     @NonNull
@@ -399,5 +347,57 @@ public class MultiSelectDialog extends AppCompatDialogFragment
         }
         Toast toast = Toast.makeText(getActivity(), message, Toast.LENGTH_LONG);
         toast.show();
+    }
+
+    public interface SubmitCallbackListener {
+
+        void onCancel();
+
+        void onSelected(@NonNull ArrayList<Integer> selectedIds, @NonNull ArrayList<String> selectedNames, @NonNull String dataString);
+    }
+
+    protected class MultiSelectFilter extends Filter {
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<MultiSelectable> list;
+            int queryLength = constraint.length();
+            if (queryLength > 0) {
+                Collection<MultiSelectable> collection = getMultiSelectItems();
+                list = new ArrayList<>(collection.size());
+                for (MultiSelectable model : collection) {
+                    CharSequence name = model.getName();
+                    String text = name.toString();
+                    String lowerCaseText = text.toLowerCase();
+                    int queryStart = lowerCaseText.indexOf(constraint.toString());
+                    int queryEnd = queryStart + queryLength;
+                    if (queryStart > -1) {
+                        MultiSelectable clone = model.clone();
+                        if (queryLength > 1) {
+                            if (clone instanceof Range) {
+                                ((Range) clone).setStart(queryStart);
+                                ((Range) clone).setEnd(queryEnd);
+                            }
+                        }
+                        list.add(clone);
+                    }
+                }
+            } else {
+                list = getList();
+            }
+            FilterResults results = new FilterResults();
+            results.count = list.size();
+            results.values = list;
+            return results;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            MultiSelectAdapter adapter = getAdapter();
+            if (adapter != null) {
+                adapter.submitList((List<MultiSelectable>) results.values);
+            }
+        }
     }
 }
