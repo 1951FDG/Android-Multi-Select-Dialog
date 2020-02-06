@@ -46,11 +46,6 @@ public class CheckableLinearLayout extends LinearLayout implements Checkable {
         }
     }
 
-    @Override
-    public void toggle() {
-        setChecked(!mChecked);
-    }
-
     @NonNull
     @Override
     protected int[] onCreateDrawableState(int extraSpace) {
@@ -59,5 +54,10 @@ public class CheckableLinearLayout extends LinearLayout implements Checkable {
             mergeDrawableStates(drawableState, CHECKED_STATE_SET);
         }
         return drawableState;
+    }
+
+    @Override
+    public void toggle() {
+        setChecked(!mChecked);
     }
 }
