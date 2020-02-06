@@ -26,18 +26,18 @@ class MultiSelectViewHolder extends ViewHolder implements View.OnClickListener {
 
     private static final Factory SPANNABLE_FACTORY = new MultiSelectFactory();
 
-    private final ImageView imageView;
+    private final ImageView mImageView;
 
-    private final SelectionCallbackListener listener;
+    private final SelectionCallbackListener mListener;
 
-    private final TextView titleView;
+    private final TextView mTitleView;
 
-    MultiSelectViewHolder(@NonNull View v, SelectionCallbackListener l) {
-        super(v);
-        listener = l;
-        View checkboxView = v.findViewById(R.id.dialog_item_checkbox);
-        imageView = v.findViewById(R.id.dialog_item_icon);
-        titleView = v.findViewById(R.id.dialog_item_name);
+    MultiSelectViewHolder(@NonNull View view, SelectionCallbackListener listener) {
+        super(view);
+        mListener = listener;
+        View checkboxView = view.findViewById(R.id.dialog_item_checkbox);
+        mImageView = view.findViewById(R.id.dialog_item_icon);
+        mTitleView = view.findViewById(R.id.dialog_item_name);
         if (checkboxView instanceof ImageView) {
             ImageViewCompat.setImageTintList(((ImageView) checkboxView),
                     AppCompatResources.getColorStateList(checkboxView.getContext(), R.color.control_checkable_material));
@@ -49,11 +49,11 @@ class MultiSelectViewHolder extends ViewHolder implements View.OnClickListener {
             }
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            imageView.setClipToOutline(true);
+            mImageView.setClipToOutline(true);
         }
-        titleView.setSpannableFactory(SPANNABLE_FACTORY);
+        mTitleView.setSpannableFactory(SPANNABLE_FACTORY);
         //noinspection ThisEscapedInObjectConstruction
-        v.setOnClickListener(this);
+        view.setOnClickListener(this);
     }
 
     @Override
@@ -61,11 +61,11 @@ class MultiSelectViewHolder extends ViewHolder implements View.OnClickListener {
         //noinspection NumericCastThatLosesPrecision
         int id = (int) getItemId();
         boolean checked = ((Checkable) v).isChecked();
-        if (listener != null) {
+        if (mListener != null) {
             if (checked) {
-                listener.removeFromSelection(id);
+                mListener.removeFromSelection(id);
             } else {
-                listener.addToSelection(id);
+                mListener.addToSelection(id);
             }
         }
         ((Checkable) v).setChecked(!checked);
@@ -77,28 +77,28 @@ class MultiSelectViewHolder extends ViewHolder implements View.OnClickListener {
             resId = ((Iconable) model).getResId();
         }
         if (resId == 0) {
-            if (imageView.getVisibility() != View.GONE) {
-                imageView.setVisibility(View.GONE);
+            if (mImageView.getVisibility() != View.GONE) {
+                mImageView.setVisibility(View.GONE);
             }
         } else {
-            imageView.setImageResource(resId);
+            mImageView.setImageResource(resId);
         }
         CharSequence name = model.getName();
         if (name instanceof Spannable) {
-            titleView.setText(name, TextView.BufferType.SPANNABLE);
+            mTitleView.setText(name, TextView.BufferType.SPANNABLE);
             if (model instanceof Range) {
-                CharSequence text = titleView.getText();
+                CharSequence text = mTitleView.getText();
                 int start = ((Range) model).getStart();
                 int end = ((Range) model).getEnd();
                 //noinspection StaticFieldReferencedViaSubclass
                 ((Spannable) text).setSpan(BOLD_STYLE_SPAN, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         } else {
-            titleView.setText(name, TextView.BufferType.NORMAL);
+            mTitleView.setText(name, TextView.BufferType.NORMAL);
         }
-        if (listener != null) {
+        if (mListener != null) {
             int id = model.getId();
-            boolean checked = listener.isSelected(id);
+            boolean checked = mListener.isSelected(id);
             ((Checkable) itemView).setChecked(checked);
         }
     }
@@ -107,7 +107,7 @@ class MultiSelectViewHolder extends ViewHolder implements View.OnClickListener {
         Bundle bundle = (Bundle) payloads.get(0);
         int[] array = bundle.getIntArray(MultiSelectItemCallback.INT_ARRAY);
         if ((array != null) && (array.length != 0)) {
-            CharSequence text = titleView.getText();
+            CharSequence text = mTitleView.getText();
             if (text instanceof Spannable) {
                 //noinspection OverlyStrongTypeCast
                 StyleSpan[] spans = ((Spannable) text).getSpans(0, text.length(), StyleSpan.class);

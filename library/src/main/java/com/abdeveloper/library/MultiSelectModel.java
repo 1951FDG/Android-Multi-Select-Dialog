@@ -6,33 +6,33 @@ import android.text.SpannableString;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-@SuppressWarnings({ "ParameterHidesMemberVariable", "TransientFieldInNonSerializableClass" })
+@SuppressWarnings({ "TransientFieldInNonSerializableClass" })
 public class MultiSelectModel implements MultiSelectable, Iconable, Range {
 
-    private final int id;
+    private final int mId;
 
-    private final transient int resId;
+    private final transient int mResId;
 
-    private transient int end;
+    private transient int mEnd;
 
-    private transient int start;
+    private transient int mStart;
 
-    private CharSequence name;
+    private CharSequence mName;
 
     public MultiSelectModel(int id, @NonNull CharSequence name) {
         this(id, name, 0);
     }
 
     public MultiSelectModel(int id, @NonNull CharSequence name, int resId) {
-        this.id = id;
-        this.resId = resId;
-        this.name = name;
+        mId = id;
+        mResId = resId;
+        mName = name;
     }
 
     @SuppressWarnings("unused")
     private MultiSelectModel() {
-        id = 0;
-        resId = 0;
+        mId = 0;
+        mResId = 0;
     }
 
     @SuppressWarnings("FinalMethod")
@@ -53,42 +53,42 @@ public class MultiSelectModel implements MultiSelectable, Iconable, Range {
 
     @Override
     public int getEnd() {
-        return end;
+        return mEnd;
     }
 
     @Override
     public void setEnd(int end) {
-        this.end = end;
+        mEnd = end;
     }
 
     @Override
     public int getId() {
-        return id;
+        return mId;
     }
 
     @NonNull
     @Override
     public CharSequence getName() {
-        return name;
+        return mName;
     }
 
     @Override
     public void setName(@NonNull CharSequence charSequence) {
-        name = charSequence;
+        mName = charSequence;
     }
 
     @Override
     public int getResId() {
-        return resId;
+        return mResId;
     }
 
     @Override
     public int getStart() {
-        return start;
+        return mStart;
     }
 
     @Override
     public void setStart(int start) {
-        this.start = start;
+        mStart = start;
     }
 }

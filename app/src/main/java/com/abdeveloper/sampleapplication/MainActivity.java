@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private static final String TAG = "Cancel";
 
-    private MultiSelectDialog multiSelectDialog;
+    private MultiSelectDialog mMultiSelectDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         CharSequence[] countries = resources.getTextArray(R.array.names);
         //List of Countries with Name and Id
         ArrayList<MultiSelectable> listOfCountries = getMultiSelectModels(countries, R.array.icons);
-        multiSelectDialog = new MultiSelectDialog()
+        mMultiSelectDialog = new MultiSelectDialog()
                 .setHint(resources.getString(R.string.multi_select_dialog_hint)) //setting hint for dialog
                 .setTitle(resources.getString(R.string.multi_select_dialog_title)) //setting title for dialog
                 .setPositiveText(resources.getString(R.string.dialog_done_text))
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(@NonNull View v) {
-        multiSelectDialog.show(getSupportFragmentManager(), null);
+        mMultiSelectDialog.show(getSupportFragmentManager(), null);
     }
 
     @Override

@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class MultiSelectRecyclerView extends RecyclerView {
 
     @SuppressWarnings("ConstantConditions")
-    private final AdapterDataObserver observer = new AdapterDataObserver() {
+    private final AdapterDataObserver mAdapterDataObserver = new AdapterDataObserver() {
         @Override
         public void onChanged() {
             updateEmptyStatus(getAdapter().getItemCount() == 0);
@@ -28,7 +28,7 @@ public class MultiSelectRecyclerView extends RecyclerView {
         }
     };
 
-    private View emptyView;
+    private View mEmptyView;
 
     public MultiSelectRecyclerView(@NonNull Context context) {
         super(context);
@@ -46,21 +46,21 @@ public class MultiSelectRecyclerView extends RecyclerView {
     public void setAdapter(@Nullable Adapter adapter) {
         Adapter oldAdapter = getAdapter();
         if (oldAdapter != null) {
-            oldAdapter.unregisterAdapterDataObserver(observer);
+            oldAdapter.unregisterAdapterDataObserver(mAdapterDataObserver);
         }
         super.setAdapter(adapter);
         if (adapter != null) {
-            adapter.registerAdapterDataObserver(observer);
+            adapter.registerAdapterDataObserver(mAdapterDataObserver);
         }
     }
 
     @Nullable
     public View getEmptyView() {
-        return emptyView;
+        return mEmptyView;
     }
 
     public void setEmptyView(@Nullable View view) {
-        emptyView = view;
+        mEmptyView = view;
         Adapter adapter = getAdapter();
         boolean empty = (adapter == null) || (adapter.getItemCount() == 0);
         updateEmptyStatus(empty);
@@ -68,15 +68,15 @@ public class MultiSelectRecyclerView extends RecyclerView {
 
     public void updateEmptyStatus(boolean empty) {
         if (empty) {
-            if (emptyView != null) {
-                emptyView.setVisibility(View.VISIBLE);
+            if (mEmptyView != null) {
+                mEmptyView.setVisibility(View.VISIBLE);
                 setVisibility(View.INVISIBLE);
             } else {
                 setVisibility(View.VISIBLE);
             }
         } else {
-            if (emptyView != null) {
-                emptyView.setVisibility(View.GONE);
+            if (mEmptyView != null) {
+                mEmptyView.setVisibility(View.GONE);
             }
             setVisibility(View.VISIBLE);
         }
