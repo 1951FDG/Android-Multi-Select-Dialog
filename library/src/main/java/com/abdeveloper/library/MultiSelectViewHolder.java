@@ -38,17 +38,16 @@ class MultiSelectViewHolder extends ViewHolder implements View.OnClickListener {
         View checkboxView = view.findViewById(R.id.dialog_item_checkbox);
         mImageView = view.findViewById(R.id.dialog_item_icon);
         mTitleView = view.findViewById(R.id.dialog_item_name);
-        if (checkboxView instanceof ImageView) {
-            ImageViewCompat.setImageTintList(((ImageView) checkboxView),
-                    AppCompatResources.getColorStateList(checkboxView.getContext(), R.color.control_checkable_material));
-        }
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            if (checkboxView instanceof CompoundButton) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            if (checkboxView instanceof ImageView) {
+                ImageViewCompat.setImageTintList(((ImageView) checkboxView),
+                        AppCompatResources.getColorStateList(checkboxView.getContext(), R.color.control_checkable_material));
+            } else if (checkboxView instanceof CompoundButton) {
                 CompoundButtonCompat.setButtonTintList(((CompoundButton) checkboxView),
                         AppCompatResources.getColorStateList(checkboxView.getContext(), R.color.control_checkable_material));
             }
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        else {
             mImageView.setClipToOutline(true);
         }
         mTitleView.setSpannableFactory(SPANNABLE_FACTORY);
