@@ -39,17 +39,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         selectedCountries.add(3);
         selectedCountries.add(4);
         selectedCountries.add(7);
-        Resources resources = getResources();
-        CharSequence[] countries = resources.getTextArray(R.array.names);
+        Resources res = getResources();
+        CharSequence[] countries = res.getTextArray(R.array.names);
         //List of Countries with Name and Id
         ArrayList<MultiSelectable> listOfCountries = getMultiSelectModels(countries, R.array.icons);
         mMultiSelectDialog = new MultiSelectDialog()
-                .setHint(resources.getString(R.string.multi_select_dialog_hint)) //setting hint for dialog
-                .setTitle(resources.getString(R.string.multi_select_dialog_title)) //setting title for dialog
-                .setPositiveText(resources.getString(R.string.dialog_done_text))
-                .setNegativeText(resources.getString(R.string.dialog_cancel_text))
-                .setMinSelectionLimit(0)
-                .setMaxSelectionLimit(listOfCountries.size())
+                .setHint(res.getString(R.string.multi_select_dialog_hint)) //setting hint for dialog
+                .setTitle(res.getString(R.string.multi_select_dialog_title)) //setting title for dialog
+                .setPositiveText(res.getString(R.string.dialog_done_text))
+                .setNegativeText(res.getString(R.string.dialog_cancel_text))
+                .setMinSelectionLimit(1)
+                .setMaxSelectionLimit(1)
                 .setPreSelectIDsList(selectedCountries) //List of ids that you need to be selected
                 .setMultiSelectList(listOfCountries) // the multi select model list with ids and name
                 .setSubmitListener(this);

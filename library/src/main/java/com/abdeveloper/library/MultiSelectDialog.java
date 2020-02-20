@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.PluralsRes;
 import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.RecyclerView.RecycledViewPool;
@@ -152,7 +153,7 @@ public class MultiSelectDialog extends AppCompatDialogFragment
     @Override
     public void onClick(@NonNull View v) {
         if (v.getId() == R.id.done) {
-            Resources resources = getResources();
+            Resources res = getResources();
             int size = mPostSelectedIds.size();
             if (size >= mMinSelectionLimit) {
                 if (size <= mMaxSelectionLimit) {
@@ -165,12 +166,10 @@ public class MultiSelectDialog extends AppCompatDialogFragment
                     }
                     dismiss();
                 } else {
-                    String youCan = resources.getString(R.string.you_can_only_select_up_to);
-                    showMessage(resources, youCan, mMaxSelectionMessage, mMaxSelectionLimit);
+                    showMessage(res, R.plurals.max_selection_message, mMaxSelectionMessage, mMaxSelectionLimit);
                 }
             } else {
-                String pleaseSelect = resources.getString(R.string.please_select_at_least);
-                showMessage(resources, pleaseSelect, mMinSelectionMessage, mMinSelectionLimit);
+                showMessage(res, R.plurals.min_selection_message, mMinSelectionMessage, mMinSelectionLimit);
             }
         }
         if (v.getId() == R.id.cancel) {
@@ -337,13 +336,10 @@ public class MultiSelectDialog extends AppCompatDialogFragment
         return (data.length() > 0) ? data.substring(1) : "";
     }
 
-    private void showMessage(Resources resources, String s, String selectionMessage, int selectionLimit) {
-        String options = resources.getString(R.string.options);
-        String option = resources.getString(R.string.option);
+    private void showMessage(Resources res, @PluralsRes int id, String selectionMessage, int selectionLimit) {
         String message = selectionMessage;
         if (message.isEmpty()) {
-            //noinspection HardCodedStringLiteral
-            message = String.format("%s %d %s", s, selectionLimit, (selectionLimit > 1) ? options : option);
+            message = res.getQuantityString(id, selectionLimit, selectionLimit);
         }
         Toast toast = Toast.makeText(getActivity(), message, Toast.LENGTH_LONG);
         toast.show();
