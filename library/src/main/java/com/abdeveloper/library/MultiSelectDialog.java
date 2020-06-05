@@ -1,21 +1,22 @@
 package com.abdeveloper.library;
 
 import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.PluralsRes;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.RecyclerView.RecycledViewPool;
@@ -24,15 +25,20 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.TreeSet;
 
 @SuppressWarnings("ReturnOfThis")
 public class MultiSelectDialog extends AppCompatDialogFragment
-        implements Filterable, ViewTreeObserver.OnGlobalLayoutListener, SearchView.OnQueryTextListener, View.OnClickListener,
-        MultiSelectViewHolder.SelectionCallbackListener {
+        implements DialogInterface.OnClickListener, SearchView.OnQueryTextListener, MultiSelectViewHolder.SelectionCallbackListener,
+        Filterable {
 
     // Default Values
     private String mHint = "";
+
+    // Use this instance of the interface to deliver action events
+    @Nullable
+    private SubmitCallbackListener mListener = null;
 
     private int mMaxRecycledViews = Integer.MAX_VALUE;
 
@@ -50,75 +56,74 @@ public class MultiSelectDialog extends AppCompatDialogFragment
 
     private Collection<MultiSelectable> mMultiSelectItems;
 
-    private String mNegativeText = "";
+    @StringRes
+    private int mNegativeText = android.R.string.cancel;
 
-    private String mPositiveText = "";
+    @StringRes
+    private int mPositiveText = android.R.string.ok;
 
     private Collection<Integer> mPostSelectedIds = Collections.emptyList();
 
     private Collection<Integer> mPreSelectedIds = Collections.emptyList();
 
-    private int mRecyclerViewMinHeight;
-
-    private SubmitCallbackListener mSubmitCallbackListener;
-
     private String mTitle = "";
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        try {
+            mListener = (SubmitCallbackListener) context;
+        } catch (ClassCastException ignored) {
+            throw new ClassCastException(context + " must implement SubmitCallbackListener");
+        }
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (mRecyclerViewMinHeight == 0) {
-            if (mTitle.isEmpty()) {
-                setStyle(DialogFragment.STYLE_NO_TITLE, R.style.FullScreenDialogStyle);
-            } else {
-                setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
-            }
-            mMultiSelectAdapter = new MultiSelectAdapter(this);
-            mMultiSelectAdapter.setHasStableIds(true);
-            mMultiSelectAdapter.submitList(getList());
+
+        if (mTitle.isEmpty()) {
+            setStyle(DialogFragment.STYLE_NO_TITLE, R.style.FullScreenDialogStyle);
+        } else {
+            setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
         }
+
+        mMultiSelectAdapter = new MultiSelectAdapter(this);
+        mMultiSelectAdapter.setHasStableIds(true);
+        mMultiSelectAdapter.submitList(getList());
     }
 
-    @Nullable
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Dialog dialog = requireDialog();
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext(), getTheme());
         if (!mTitle.isEmpty()) {
-            dialog.setTitle(mTitle);
+            builder.setTitle(mTitle);
         }
-        return inflater.inflate(R.layout.multi_select_dialog, container, false);
+        LayoutInflater inflater = LayoutInflater.from(builder.getContext());
+        View view = inflater.inflate(R.layout.multi_select_dialog, null, false);
+        onViewCreated(view, null);
+        builder.setView(view);
+        builder.setPositiveButton(mPositiveText, this);
+        builder.setNegativeButton(mNegativeText, this);
+        return builder.create();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         MultiSelectRecyclerView recyclerView = view.findViewById(R.id.recycler);
         recyclerView.setAdapter(mMultiSelectAdapter);
         recyclerView.setEmptyView(view.findViewById(R.id.stub));
         recyclerView.setHasFixedSize(true);
-        if (mRecyclerViewMinHeight == 0) {
-            ViewTreeObserver observer = recyclerView.getViewTreeObserver();
-            observer.addOnGlobalLayoutListener(this);
-        } else {
-            recyclerView.setMinimumHeight(mRecyclerViewMinHeight);
-        }
         RecycledViewPool recycledViewPool = recyclerView.getRecycledViewPool();
         recycledViewPool.setMaxRecycledViews(R.layout.multi_select_item, mMaxRecycledViews);
         SearchView searchView = view.findViewById(R.id.search);
         searchView.setOnQueryTextListener(this);
         searchView.onActionViewExpanded();
         searchView.clearFocus();
-        TextView dialogSubmit = view.findViewById(R.id.done);
-        dialogSubmit.setOnClickListener(this);
-        TextView dialogCancel = view.findViewById(R.id.cancel);
-        dialogCancel.setOnClickListener(this);
         if (!mHint.isEmpty()) {
             searchView.setQueryHint(mHint);
-        }
-        if (!mPositiveText.isEmpty()) {
-            dialogSubmit.setText(mPositiveText);
-        }
-        if (!mNegativeText.isEmpty()) {
-            dialogCancel.setText(mNegativeText);
         }
     }
 
@@ -128,12 +133,70 @@ public class MultiSelectDialog extends AppCompatDialogFragment
         if (BuildConfig.DEBUG && !mPostSelectedIds.equals(mPreSelectedIds)) {
             throw new AssertionError(String.format("expected same:<%s> was not:<%s>", mPreSelectedIds, mPostSelectedIds));
         }
+
         super.onStart();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        mListener = null;
+    }
+
+    @Override
+    public void onClick(@Nullable DialogInterface dialog, int which) {
+        if (which == DialogInterface.BUTTON_POSITIVE) {
+            Resources res = getResources();
+            int size = mPostSelectedIds.size();
+            if (size >= mMinSelectionLimit) {
+                if (size <= mMaxSelectionLimit) {
+                    mPreSelectedIds = Collections.checkedSortedSet(new TreeSet<>(mPostSelectedIds), Integer.class);
+                    if (mListener != null) {
+                        ArrayList<Integer> selectedIds = new ArrayList<>(mPostSelectedIds);
+                        ArrayList<String> selectedNames = getSelectNameList(getMultiSelectItems());
+                        String dataString = getSelectedDataString(getMultiSelectItems());
+                        mListener.onSelected(selectedIds, selectedNames, dataString);
+                    }
+                } else {
+                    showMessage(res, R.plurals.max_selection_message, mMaxSelectionMessage, mMaxSelectionLimit);
+                }
+            } else {
+                showMessage(res, R.plurals.min_selection_message, mMinSelectionMessage, mMinSelectionLimit);
+            }
+        } else if (which == DialogInterface.BUTTON_NEGATIVE) {
+            if (mListener != null) {
+                mListener.onCancel();
+            }
+        }
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(@NonNull String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(@NonNull String newText) {
+        String lowerCaseQuery = newText.toLowerCase(Locale.ENGLISH);
+        Filter filter = getFilter();
+        filter.filter(lowerCaseQuery, null);
+        return true;
     }
 
     @Override
     public boolean addToSelection(@NonNull Integer id) {
         return mPostSelectedIds.add(id);
+    }
+
+    @Override
+    public boolean isSelected(@NonNull Integer id) {
+        return mPostSelectedIds.contains(id);
+    }
+
+    @Override
+    public boolean removeFromSelection(@NonNull Integer id) {
+        return mPostSelectedIds.remove(id);
     }
 
     @NonNull
@@ -143,74 +206,6 @@ public class MultiSelectDialog extends AppCompatDialogFragment
             mMultiSelectFilter = new MultiSelectFilter();
         }
         return mMultiSelectFilter;
-    }
-
-    @Override
-    public boolean isSelected(@NonNull Integer id) {
-        return mPostSelectedIds.contains(id);
-    }
-
-    @Override
-    public void onClick(@NonNull View v) {
-        if (v.getId() == R.id.done) {
-            Resources res = getResources();
-            int size = mPostSelectedIds.size();
-            if (size >= mMinSelectionLimit) {
-                if (size <= mMaxSelectionLimit) {
-                    mPreSelectedIds = Collections.checkedSortedSet(new TreeSet<>(mPostSelectedIds), Integer.class);
-                    if (mSubmitCallbackListener != null) {
-                        ArrayList<Integer> selectedIds = new ArrayList<>(mPostSelectedIds);
-                        ArrayList<String> selectedNames = getSelectNameList(getMultiSelectItems());
-                        String dataString = getSelectedDataString(getMultiSelectItems());
-                        mSubmitCallbackListener.onSelected(selectedIds, selectedNames, dataString);
-                    }
-                    dismiss();
-                } else {
-                    showMessage(res, R.plurals.max_selection_message, mMaxSelectionMessage, mMaxSelectionLimit);
-                }
-            } else {
-                showMessage(res, R.plurals.min_selection_message, mMinSelectionMessage, mMinSelectionLimit);
-            }
-        }
-        if (v.getId() == R.id.cancel) {
-            if (mSubmitCallbackListener != null) {
-                mSubmitCallbackListener.onCancel();
-            }
-            dismiss();
-        }
-    }
-
-    @Override
-    public void onGlobalLayout() {
-        Dialog dialog = requireDialog();
-        View view = dialog.findViewById(R.id.recycler_view);
-        if (view == null) {
-            throw new IllegalArgumentException("ID does not reference a View inside this Dialog");
-        }
-        mRecyclerViewMinHeight = view.getHeight();
-        view.setMinimumHeight(mRecyclerViewMinHeight);
-        ViewTreeObserver observer = view.getViewTreeObserver();
-        observer.removeOnGlobalLayoutListener(this);
-    }
-
-    @Override
-    public boolean onQueryTextChange(@NonNull String newText) {
-        if (isVisible()) {
-            String lowerCaseQuery = newText.toLowerCase();
-            Filter filter = getFilter();
-            filter.filter(lowerCaseQuery, null);
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(@NonNull String query) {
-        return false;
-    }
-
-    @Override
-    public boolean removeFromSelection(@NonNull Integer id) {
-        return mPostSelectedIds.remove(id);
     }
 
     @Nullable
@@ -280,13 +275,13 @@ public class MultiSelectDialog extends AppCompatDialogFragment
     }
 
     @NonNull
-    public MultiSelectDialog setNegativeText(@NonNull String message) {
+    public MultiSelectDialog setNegativeText(@StringRes int message) {
         mNegativeText = message;
         return this;
     }
 
     @NonNull
-    public MultiSelectDialog setPositiveText(@NonNull String message) {
+    public MultiSelectDialog setPositiveText(@StringRes int message) {
         mPositiveText = message;
         return this;
     }
@@ -294,12 +289,6 @@ public class MultiSelectDialog extends AppCompatDialogFragment
     @NonNull
     public MultiSelectDialog setPreSelectIDsList(@NonNull Collection<Integer> list) {
         mPreSelectedIds = Collections.checkedSortedSet(new TreeSet<>(list), Integer.class);
-        return this;
-    }
-
-    @NonNull
-    public MultiSelectDialog setSubmitListener(@Nullable SubmitCallbackListener callback) {
-        mSubmitCallbackListener = callback;
         return this;
     }
 
@@ -364,7 +353,7 @@ public class MultiSelectDialog extends AppCompatDialogFragment
                 for (MultiSelectable model : collection) {
                     CharSequence name = model.getName();
                     String text = name.toString();
-                    String lowerCaseText = text.toLowerCase();
+                    String lowerCaseText = text.toLowerCase(Locale.ENGLISH);
                     int queryStart = lowerCaseText.indexOf(constraint.toString());
                     int queryEnd = queryStart + queryLength;
                     if (queryStart > -1) {

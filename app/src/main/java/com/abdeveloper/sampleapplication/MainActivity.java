@@ -25,35 +25,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private static final String TAG = "Cancel";
 
-    private MultiSelectDialog mMultiSelectDialog;
+    private ArrayList<MultiSelectable> mCountries;
+
+    private ArrayList<Integer> mSelectedCountries;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //preselected Ids of Country List
-        ArrayList<Integer> selectedCountries = new ArrayList<>(4);
-        selectedCountries.add(1);
-        selectedCountries.add(3);
-        selectedCountries.add(4);
-        selectedCountries.add(7);
+
         Resources res = getResources();
-        CharSequence[] countries = res.getTextArray(R.array.names);
-        //List of Countries with Name and Id
-        ArrayList<MultiSelectable> listOfCountries = getMultiSelectModels(countries, R.array.icons);
-        mMultiSelectDialog = new MultiSelectDialog()
-                .setHint(res.getString(R.string.multi_select_dialog_hint)) //setting hint for dialog
-                .setTitle(res.getString(R.string.multi_select_dialog_title)) //setting title for dialog
-                .setPositiveText(res.getString(R.string.dialog_done_text))
-                .setNegativeText(res.getString(R.string.dialog_cancel_text))
-                .setMinSelectionLimit(1)
-                .setMaxSelectionLimit(1)
-                .setPreSelectIDsList(selectedCountries) //List of ids that you need to be selected
-                .setMultiSelectList(listOfCountries) // the multi select model list with ids and name
-                .setSubmitListener(this);
+        mCountries = getMultiSelectModels(res.getTextArray(R.array.names), R.array.icons);
+        mSelectedCountries = new ArrayList<>(4);
+        mSelectedCountries.add(1);
+        mSelectedCountries.add(3);
+        mSelectedCountries.add(4);
+        mSelectedCountries.add(7);
+
         MainActivityBinding binding = MainActivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         binding.button.setOnClickListener(this);
         binding.button.performClick();
+    }
+
+    @Override
+    public void onClick(@NonNull View v) {
+        MultiSelectDialog dialog = new MultiSelectDialog();
+        dialog.setHint(getString(R.string.multi_select_dialog_hint));
+        dialog.setTitle(getString(R.string.multi_select_dialog_title));
+        dialog.setPositiveText(R.string.dialog_done_text);
+        dialog.setNegativeText(R.string.dialog_cancel_text);
+        dialog.setMinSelectionLimit(1);
+        dialog.setMaxSelectionLimit(10);
+        dialog.setPreSelectIDsList(mSelectedCountries);
+        dialog.setMultiSelectList(mCountries);
+        dialog.show(getSupportFragmentManager(), null);
     }
 
     @Override
@@ -62,15 +67,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onClick(@NonNull View v) {
-        mMultiSelectDialog.show(getSupportFragmentManager(), null);
-    }
-
-    @Override
     public void onSelected(@NonNull ArrayList<Integer> selectedIds, @NonNull ArrayList<String> selectedNames, @NonNull String dataString) {
-        Toast toast = Toast.makeText(this,
-                String.format("Selected Ids : %s\nSelected Names : %s\nDataString : %s", selectedIds, selectedNames, dataString),
-                Toast.LENGTH_LONG);
+        mSelectedCountries = selectedIds;
+        String text = String.format("Selected Ids : %s\nSelected Names : %s\nDataString : %s", selectedIds, selectedNames, dataString);
+        Toast toast = Toast.makeText(this, text, Toast.LENGTH_LONG);
         toast.show();
     }
 

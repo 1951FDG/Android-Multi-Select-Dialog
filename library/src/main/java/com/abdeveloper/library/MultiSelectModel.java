@@ -3,10 +3,11 @@ package com.abdeveloper.library;
 import android.text.Spannable;
 import android.text.SpannableString;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-@SuppressWarnings({ "TransientFieldInNonSerializableClass" })
+@SuppressWarnings("TransientFieldInNonSerializableClass")
 public class MultiSelectModel implements MultiSelectable, Iconable, Range {
 
     private final int mId;
@@ -23,7 +24,7 @@ public class MultiSelectModel implements MultiSelectable, Iconable, Range {
         this(id, name, 0);
     }
 
-    public MultiSelectModel(int id, @NonNull CharSequence name, int resId) {
+    public MultiSelectModel(int id, @NonNull CharSequence name, @DrawableRes int resId) {
         mId = id;
         mResId = resId;
         mName = name;

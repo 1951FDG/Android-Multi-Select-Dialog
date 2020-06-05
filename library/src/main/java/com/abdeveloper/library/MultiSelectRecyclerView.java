@@ -28,6 +28,7 @@ public class MultiSelectRecyclerView extends RecyclerView {
         }
     };
 
+    @Nullable
     private View mEmptyView;
 
     public MultiSelectRecyclerView(@NonNull Context context) {

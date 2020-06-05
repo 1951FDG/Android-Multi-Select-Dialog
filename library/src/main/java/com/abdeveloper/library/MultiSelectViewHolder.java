@@ -40,14 +40,13 @@ class MultiSelectViewHolder extends ViewHolder implements View.OnClickListener {
         mTitleView = view.findViewById(R.id.text);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             if (checkboxView instanceof ImageView) {
-                ImageViewCompat.setImageTintList(((ImageView) checkboxView),
+                ImageViewCompat.setImageTintList((ImageView) checkboxView,
                         AppCompatResources.getColorStateList(checkboxView.getContext(), R.color.control_checkable_material));
             } else if (checkboxView instanceof CompoundButton) {
-                CompoundButtonCompat.setButtonTintList(((CompoundButton) checkboxView),
+                CompoundButtonCompat.setButtonTintList((CompoundButton) checkboxView,
                         AppCompatResources.getColorStateList(checkboxView.getContext(), R.color.control_checkable_material));
             }
-        }
-        else {
+        } else {
             mImageView.setClipToOutline(true);
         }
         mTitleView.setSpannableFactory(SPANNABLE_FACTORY);
@@ -108,7 +107,6 @@ class MultiSelectViewHolder extends ViewHolder implements View.OnClickListener {
         if ((array != null) && (array.length != 0)) {
             CharSequence text = mTitleView.getText();
             if (text instanceof Spannable) {
-                //noinspection OverlyStrongTypeCast
                 StyleSpan[] spans = ((Spannable) text).getSpans(0, text.length(), StyleSpan.class);
                 if (spans.length > 0) {
                     //noinspection StaticFieldReferencedViaSubclass
