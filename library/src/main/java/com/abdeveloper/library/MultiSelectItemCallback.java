@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil;
 
 class MultiSelectItemCallback extends DiffUtil.ItemCallback<MultiSelectable> {
 
-    static final String INT_ARRAY = "INT_ARRAY";
+    static final String BUNDLE_INT_ARRAY = "INT_ARRAY";
 
     @Override
     public boolean areItemsTheSame(@NonNull MultiSelectable oldItem, @NonNull MultiSelectable newItem) {
@@ -28,7 +28,7 @@ class MultiSelectItemCallback extends DiffUtil.ItemCallback<MultiSelectable> {
         Bundle payload = new Bundle();
         if (newItem instanceof Range) {
             int[] value = { ((Range) newItem).getStart(), ((Range) newItem).getEnd() };
-            payload.putIntArray(INT_ARRAY, value);
+            payload.putIntArray(BUNDLE_INT_ARRAY, value);
         }
         return payload;
     }

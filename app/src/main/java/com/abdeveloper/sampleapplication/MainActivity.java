@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.ArrayRes;
@@ -18,6 +17,7 @@ import com.abdeveloper.library.MultiSelectDialog;
 import com.abdeveloper.library.MultiSelectDialog.SubmitCallbackListener;
 import com.abdeveloper.library.MultiSelectModel;
 import com.abdeveloper.library.MultiSelectable;
+import com.abdeveloper.sampleapplication.databinding.MainActivityBinding;
 
 import java.util.ArrayList;
 
@@ -30,9 +30,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_activity);
-        Button button = findViewById(R.id.show_dialog);
-        button.setOnClickListener(this);
         //preselected Ids of Country List
         ArrayList<Integer> selectedCountries = new ArrayList<>(4);
         selectedCountries.add(1);
@@ -53,7 +50,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .setPreSelectIDsList(selectedCountries) //List of ids that you need to be selected
                 .setMultiSelectList(listOfCountries) // the multi select model list with ids and name
                 .setSubmitListener(this);
-        button.performClick();
+        MainActivityBinding binding = MainActivityBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        binding.button.setOnClickListener(this);
+        binding.button.performClick();
     }
 
     @Override
@@ -80,9 +80,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int length = icons.length();
         ArrayList<MultiSelectable> listOfCountries = new ArrayList<>(length);
         for (int index = 0; index < length; index++) {
-            int resid = icons.getResourceId(index, 0);
+            int resId = icons.getResourceId(index, 0);
             SpannableString spannableString = new SpannableString(countries[index]);
-            listOfCountries.add(new MultiSelectModel(index, spannableString, resid));
+            listOfCountries.add(new MultiSelectModel(index, spannableString, resId));
         }
         icons.recycle();
         return listOfCountries;

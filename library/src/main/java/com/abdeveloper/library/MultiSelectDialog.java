@@ -91,7 +91,7 @@ public class MultiSelectDialog extends AppCompatDialogFragment
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        MultiSelectRecyclerView recyclerView = view.findViewById(R.id.recycler_view);
+        MultiSelectRecyclerView recyclerView = view.findViewById(R.id.recycler);
         recyclerView.setAdapter(mMultiSelectAdapter);
         recyclerView.setEmptyView(view.findViewById(R.id.stub));
         recyclerView.setHasFixedSize(true);
@@ -103,7 +103,7 @@ public class MultiSelectDialog extends AppCompatDialogFragment
         }
         RecycledViewPool recycledViewPool = recyclerView.getRecycledViewPool();
         recycledViewPool.setMaxRecycledViews(R.layout.multi_select_item, mMaxRecycledViews);
-        SearchView searchView = view.findViewById(R.id.search_view);
+        SearchView searchView = view.findViewById(R.id.search);
         searchView.setOnQueryTextListener(this);
         searchView.onActionViewExpanded();
         searchView.clearFocus();

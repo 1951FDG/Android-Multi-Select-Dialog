@@ -2,7 +2,7 @@
 <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/dialog_item_checkbox"
+    android:id="@+id/checkbox"
     android:layout_width="24dp"
     android:layout_height="24dp"
     android:layout_gravity="center_vertical"
@@ -10,4 +10,5 @@
     android:duplicateParentState="true"
     android:scaleType="center"
     app:srcCompat="@drawable/btn_check_material"
-    tools:ignore="ContentDescription" />
+    tools:ignore="ContentDescription"
+    tools:showIn="@layout/multi_select_item" />

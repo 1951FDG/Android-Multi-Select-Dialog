@@ -35,9 +35,9 @@ class MultiSelectViewHolder extends ViewHolder implements View.OnClickListener {
     MultiSelectViewHolder(@NonNull View view, SelectionCallbackListener listener) {
         super(view);
         mListener = listener;
-        View checkboxView = view.findViewById(R.id.dialog_item_checkbox);
-        mImageView = view.findViewById(R.id.dialog_item_icon);
-        mTitleView = view.findViewById(R.id.dialog_item_name);
+        View checkboxView = view.findViewById(R.id.checkbox);
+        mImageView = view.findViewById(R.id.image);
+        mTitleView = view.findViewById(R.id.text);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             if (checkboxView instanceof ImageView) {
                 ImageViewCompat.setImageTintList(((ImageView) checkboxView),
@@ -104,7 +104,7 @@ class MultiSelectViewHolder extends ViewHolder implements View.OnClickListener {
 
     void bind(MultiSelectable model, List<Object> payloads) {
         Bundle bundle = (Bundle) payloads.get(0);
-        int[] array = bundle.getIntArray(MultiSelectItemCallback.INT_ARRAY);
+        int[] array = bundle.getIntArray(MultiSelectItemCallback.BUNDLE_INT_ARRAY);
         if ((array != null) && (array.length != 0)) {
             CharSequence text = mTitleView.getText();
             if (text instanceof Spannable) {

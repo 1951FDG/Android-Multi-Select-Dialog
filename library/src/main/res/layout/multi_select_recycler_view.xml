@@ -2,7 +2,7 @@
 <com.abdeveloper.library.MultiSelectRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/recycler_view"
+    android:id="@+id/recycler"
     style="@style/Widget.AppCompat.ListView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -17,6 +17,7 @@
     app:fastScrollVerticalThumbDrawable="@drawable/fastscroll_thumb_material"
     app:fastScrollVerticalTrackDrawable="@drawable/fastscroll_track_material"
     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+    tools:itemCount="100"
     tools:listitem="@layout/multi_select_item"
     tools:scrollbars="vertical"
     tools:showIn="@layout/multi_select_dialog" />
