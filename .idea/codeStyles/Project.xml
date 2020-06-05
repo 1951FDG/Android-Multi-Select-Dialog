@@ -63,6 +63,7 @@
       </extensions>
     </Objective-C-extensions>
     <XML>
+      <option name="XML_KEEP_BLANK_LINES" value="1" />
       <option name="XML_LEGACY_SETTINGS_IMPORTED" value="true" />
     </XML>
     <codeStyleSettings language="CMake">
@@ -612,6 +613,26 @@
               <match>
                 <AND>
                   <NAME>onCreate</NAME>
+                  <OVERRIDDEN />
+                </AND>
+              </match>
+            </rule>
+          </section>
+          <section>
+            <rule>
+              <match>
+                <AND>
+                  <NAME>onCreateDialog</NAME>
+                  <OVERRIDDEN />
+                </AND>
+              </match>
+            </rule>
+          </section>
+          <section>
+            <rule>
+              <match>
+                <AND>
+                  <NAME>onCreatePreferences</NAME>
                   <OVERRIDDEN />
                 </AND>
               </match>
