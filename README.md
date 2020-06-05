@@ -1,6 +1,6 @@
 # MultiSelectDialog v3
 
-[![API](https://img.shields.io/badge/API-16%2B-blue.svg)](https://android-arsenal.com/api?level=16)
+[![API](https://img.shields.io/badge/API-17%2B-blue.svg)](https://android-arsenal.com/api?level=17)
 [![JitPack](https://img.shields.io/jitpack/v/1951FDG/Android-Multi-Select-Dialog.svg)](https://jitpack.io/#1951FDG/Android-Multi-Select-Dialog)
 
 A fast and efficient multi choice select DialogFragment with async search and text highlighting
@@ -42,7 +42,7 @@ _Am I missing some essential feature?_
 
 ```gradle
 	dependencies {
-      		 implementation 'com.github.1951FDG:Android-Multi-Select-Dialog:v3.4'
+      		 implementation 'com.github.1951FDG:Android-Multi-Select-Dialog:v3.7'
 	}
 ```
 
@@ -56,7 +56,7 @@ For a working implementation of this project, see the [`./app/src/main`](app/src
 
 ## Requirements
 
--   **Minimum Android SDK** `4.1 (API level 16)`
+-   **Minimum Android SDK** `4.2 (API level 17)`
 -   **Compile Android SDK** `10 (API level 29)`
 
 ## Feedback
