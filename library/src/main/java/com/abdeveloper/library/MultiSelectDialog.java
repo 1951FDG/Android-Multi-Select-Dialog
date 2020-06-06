@@ -13,6 +13,7 @@ import android.widget.Filterable;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.PluralsRes;
@@ -255,13 +256,13 @@ public class MultiSelectDialog extends AppCompatDialogFragment
     }
 
     @NonNull
-    public MultiSelectDialog setMaxRecycledViews(int max) {
+    public MultiSelectDialog setMaxRecycledViews(@IntRange(from = 5, to = Integer.MAX_VALUE) int max) {
         mMaxRecycledViews = max;
         return this;
     }
 
     @NonNull
-    public MultiSelectDialog setMaxSelectionLimit(int limit) {
+    public MultiSelectDialog setMaxSelectionLimit(@IntRange(from = 1, to = Integer.MAX_VALUE) int limit) {
         mMaxSelectionLimit = limit;
         return this;
     }
@@ -273,7 +274,7 @@ public class MultiSelectDialog extends AppCompatDialogFragment
     }
 
     @NonNull
-    public MultiSelectDialog setMinSelectionLimit(int limit) {
+    public MultiSelectDialog setMinSelectionLimit(@IntRange(from = 1, to = Integer.MAX_VALUE) int limit) {
         mMinSelectionLimit = limit;
         return this;
     }
