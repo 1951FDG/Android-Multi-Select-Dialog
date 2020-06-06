@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.SearchView;
@@ -30,8 +31,8 @@ import java.util.TreeSet;
 
 @SuppressWarnings("ReturnOfThis")
 public class MultiSelectDialog extends AppCompatDialogFragment
-        implements DialogInterface.OnClickListener, SearchView.OnQueryTextListener, MultiSelectViewHolder.SelectionCallbackListener,
-        Filterable {
+        implements DialogInterface.OnClickListener, ViewTreeObserver.OnGlobalLayoutListener, SearchView.OnQueryTextListener,
+        MultiSelectViewHolder.SelectionCallbackListener, Filterable {
 
     // Default Values
     private String mHint = "";
@@ -120,6 +121,9 @@ public class MultiSelectDialog extends AppCompatDialogFragment
         RecycledViewPool recycledViewPool = recyclerView.getRecycledViewPool();
         recycledViewPool.setMaxRecycledViews(R.layout.multi_select_item, mMaxRecycledViews);
 
+        ViewTreeObserver observer = recyclerView.getViewTreeObserver();
+        observer.addOnGlobalLayoutListener(this);
+
         SearchView searchView = view.findViewById(R.id.search);
         searchView.setOnQueryTextListener(this);
         searchView.onActionViewExpanded();
@@ -171,6 +175,19 @@ public class MultiSelectDialog extends AppCompatDialogFragment
                 mListener.onCancel();
             }
         }
+    }
+
+    @Override
+    public void onGlobalLayout() {
+        Dialog dialog = requireDialog();
+        View view = dialog.findViewById(R.id.recycler);
+        if (view == null) {
+            throw new IllegalArgumentException("ID does not reference a View inside this Dialog");
+        }
+        int minHeight = view.getHeight();
+        view.setMinimumHeight(minHeight);
+        ViewTreeObserver observer = view.getViewTreeObserver();
+        observer.removeOnGlobalLayoutListener(this);
     }
 
     @Override
