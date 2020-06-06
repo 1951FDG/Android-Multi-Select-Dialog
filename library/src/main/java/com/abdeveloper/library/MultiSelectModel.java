@@ -44,7 +44,7 @@ public class MultiSelectModel implements MultiSelectable, Iconable, Range {
             MultiSelectModel clone = (MultiSelectModel) super.clone();
             CharSequence name = clone.getName();
             if (name instanceof Spannable) {
-                clone.setName(new SpannableString(name));
+                clone.setName(new SpannableString(name.toString()));
             }
             return clone;
         } catch (CloneNotSupportedException ignored) {

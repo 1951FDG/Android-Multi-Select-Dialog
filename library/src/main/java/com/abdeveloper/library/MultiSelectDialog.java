@@ -54,7 +54,7 @@ public class MultiSelectDialog extends AppCompatDialogFragment
 
     private MultiSelectFilter mMultiSelectFilter;
 
-    private Collection<MultiSelectable> mMultiSelectItems;
+    private List<MultiSelectable> mMultiSelectItems;
 
     @StringRes
     private int mNegativeText = android.R.string.cancel;
@@ -91,7 +91,7 @@ public class MultiSelectDialog extends AppCompatDialogFragment
 
         mMultiSelectAdapter = new MultiSelectAdapter(this);
         mMultiSelectAdapter.setHasStableIds(true);
-        mMultiSelectAdapter.submitList(getList());
+        mMultiSelectAdapter.submitList(mMultiSelectItems);
     }
 
     @NonNull
@@ -116,8 +116,10 @@ public class MultiSelectDialog extends AppCompatDialogFragment
         recyclerView.setAdapter(mMultiSelectAdapter);
         recyclerView.setEmptyView(view.findViewById(R.id.stub));
         recyclerView.setHasFixedSize(true);
+
         RecycledViewPool recycledViewPool = recyclerView.getRecycledViewPool();
         recycledViewPool.setMaxRecycledViews(R.layout.multi_select_item, mMaxRecycledViews);
+
         SearchView searchView = view.findViewById(R.id.search);
         searchView.setOnQueryTextListener(this);
         searchView.onActionViewExpanded();
@@ -154,8 +156,8 @@ public class MultiSelectDialog extends AppCompatDialogFragment
                     mPreSelectedIds = Collections.checkedSortedSet(new TreeSet<>(mPostSelectedIds), Integer.class);
                     if (mListener != null) {
                         ArrayList<Integer> selectedIds = new ArrayList<>(mPostSelectedIds);
-                        ArrayList<String> selectedNames = getSelectNameList(getMultiSelectItems());
-                        String dataString = getSelectedDataString(getMultiSelectItems());
+                        ArrayList<String> selectedNames = getSelectNameList(mMultiSelectItems);
+                        String dataString = getSelectedDataString(mMultiSelectItems);
                         mListener.onSelected(selectedIds, selectedNames, dataString);
                     }
                 } else {
@@ -215,9 +217,9 @@ public class MultiSelectDialog extends AppCompatDialogFragment
 
     @NonNull
     public List<MultiSelectable> getList() {
-        Collection<MultiSelectable> collection = getMultiSelectItems();
-        List<MultiSelectable> list = new ArrayList<>(collection.size());
-        for (MultiSelectable model : collection) {
+        Collection<MultiSelectable> items = getMultiSelectItems();
+        List<MultiSelectable> list = new ArrayList<>(items.size());
+        for (MultiSelectable model : items) {
             MultiSelectable clone = model.clone();
             list.add(clone);
         }
@@ -225,8 +227,8 @@ public class MultiSelectDialog extends AppCompatDialogFragment
     }
 
     @NonNull
-    public Collection<MultiSelectable> getMultiSelectItems() {
-        return (mMultiSelectItems != null) ? mMultiSelectItems : Collections.unmodifiableCollection(new ArrayList<MultiSelectable>(0));
+    public List<MultiSelectable> getMultiSelectItems() {
+        return (mMultiSelectItems != null) ? mMultiSelectItems : new ArrayList<MultiSelectable>(0);
     }
 
     @NonNull
@@ -266,8 +268,8 @@ public class MultiSelectDialog extends AppCompatDialogFragment
     }
 
     @NonNull
-    public MultiSelectDialog setMultiSelectList(@NonNull Collection<MultiSelectable> list) {
-        mMultiSelectItems = Collections.unmodifiableCollection(new ArrayList<>(list));
+    public MultiSelectDialog setMultiSelectList(@NonNull List<MultiSelectable> list) {
+        mMultiSelectItems = list;
         if (mMaxSelectionLimit == 0) {
             mMaxSelectionLimit = list.size();
         }
@@ -303,9 +305,7 @@ public class MultiSelectDialog extends AppCompatDialogFragment
         for (MultiSelectable model : list) {
             int id = model.getId();
             if (mPostSelectedIds.contains(id)) {
-                CharSequence name = model.getName();
-                String str = name.toString();
-                names.add(str);
+                names.add(model.getName().toString());
             }
         }
         return names;
@@ -317,9 +317,7 @@ public class MultiSelectDialog extends AppCompatDialogFragment
             int id = model.getId();
             if (mPostSelectedIds.contains(id)) {
                 data.append(", ");
-                CharSequence name = model.getName();
-                String str = name.toString();
-                data.append(str);
+                data.append(model.getName());
             }
         }
         return (data.length() > 0) ? data.substring(1) : "";
@@ -343,36 +341,39 @@ public class MultiSelectDialog extends AppCompatDialogFragment
 
     protected class MultiSelectFilter extends Filter {
 
+        private static final int INDEX_NOT_FOUND = -1;
+
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-            List<MultiSelectable> list;
-            int queryLength = constraint.length();
-            if (queryLength > 0) {
-                Collection<MultiSelectable> collection = getMultiSelectItems();
-                list = new ArrayList<>(collection.size());
-                for (MultiSelectable model : collection) {
+            List<MultiSelectable> list = null;
+            int length = constraint.length();
+            if (length > 0) {
+                List<MultiSelectable> items = getMultiSelectItems();
+                List<MultiSelectable> newList = new ArrayList<>(items.size());
+                for (MultiSelectable model : items) {
                     CharSequence name = model.getName();
-                    String text = name.toString();
-                    String lowerCaseText = text.toLowerCase(Locale.ENGLISH);
-                    int queryStart = lowerCaseText.indexOf(constraint.toString());
-                    int queryEnd = queryStart + queryLength;
-                    if (queryStart > -1) {
+                    int queryStart = indexOfIgnoreCase(name, constraint);
+                    int queryEnd = queryStart + length;
+                    if (queryStart > INDEX_NOT_FOUND) {
                         MultiSelectable clone = model.clone();
-                        if (queryLength > 1) {
+                        if (length > 1) {
                             if (clone instanceof Range) {
                                 ((Range) clone).setStart(queryStart);
                                 ((Range) clone).setEnd(queryEnd);
                             }
                         }
-                        list.add(clone);
+                        newList.add(clone);
                     }
                 }
+                if (!newList.isEmpty()) {
+                    list = newList;
+                }
             } else {
-                list = getList();
+                list = getMultiSelectItems();
             }
             FilterResults results = new FilterResults();
-            results.count = list.size();
             results.values = list;
+            results.count = (list == null) ? 0 : list.size();
             return results;
         }
 
@@ -383,6 +384,39 @@ public class MultiSelectDialog extends AppCompatDialogFragment
             if (adapter != null) {
                 adapter.submitList((List<MultiSelectable>) results.values);
             }
+        }
+
+        private int indexOfIgnoreCase(@NonNull CharSequence seq, @NonNull CharSequence searchSeq) {
+            int endLimit = (seq.length() - searchSeq.length()) + 1;
+            if (endLimit < 0) {
+                return INDEX_NOT_FOUND;
+            }
+            for (int i = 0; i < endLimit; i++) {
+                if (regionMatches(seq, i, searchSeq, 0, searchSeq.length())) {
+                    return i;
+                }
+            }
+            return INDEX_NOT_FOUND;
+        }
+
+        @SuppressWarnings({ "ContinueStatement", "ImplicitNumericConversion", "ValueOfIncrementOrDecrementUsed" })
+        private boolean regionMatches(@NonNull CharSequence seq, int toffset, @NonNull CharSequence searchSeq, int ooffset, int len) {
+            int to = toffset;
+            int po = ooffset;
+            while (len-- > 0) {
+                char c1 = seq.charAt(to++);
+                char c2 = searchSeq.charAt(po++);
+                if (c1 == c2) {
+                    continue;
+                }
+                char u1 = Character.toLowerCase(c1);
+                char u2 = Character.toLowerCase(c2);
+                if (u1 == u2) {
+                    continue;
+                }
+                return false;
+            }
+            return true;
         }
     }
 }
