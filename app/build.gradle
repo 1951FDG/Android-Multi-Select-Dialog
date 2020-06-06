@@ -17,7 +17,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    viewBinding.enabled = true
+    buildFeatures {
+        buildConfig true
+        viewBinding true
+        dataBinding false
+        aidl false
+        renderScript false
+        resValues false
+        shaders false
+    }
 }
 
 dependencies {
