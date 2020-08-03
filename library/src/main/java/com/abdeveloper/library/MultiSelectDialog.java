@@ -105,7 +105,7 @@ public class MultiSelectDialog extends AppCompatDialogFragment
         }
         LayoutInflater inflater = LayoutInflater.from(builder.getContext());
         View view = inflater.inflate(R.layout.multi_select_dialog, null, false);
-        onViewCreated(view, null);
+        onViewCreated(view, savedInstanceState);
         builder.setView(view);
         builder.setPositiveButton(mPositiveText, this);
         builder.setNegativeButton(mNegativeText, this);
